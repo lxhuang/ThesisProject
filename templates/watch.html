@@ -1,0 +1,33 @@
+
+
+<html>
+
+<head>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ static_url("json.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("jquery.session.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("swfobject.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("longtailController.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("watch.js") }}"></script>
+</head>
+
+<body>
+	
+	<div style="margin-top: 30px;"></div>
+
+	<div style="margin:auto; width:640px;">
+		<div id = "mask" style="width: 640px; height: 480px; background-color: black; z-index: 2; position: absolute;">
+			<div id="info" style="z-index: 3; position: relative; top: 50%; color: white; font-size: 18px; margin: auto; "> 
+				<span></span>
+			</div>
+		</div>
+		<div id = "workspace">	
+			<div id = "playercontainer"></div>
+		</div>
+	</div>
+
+	<div style="margin-top: 10px;" id="tip"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,821 @@
+
+
+<html>
+
+<head>
+	<style type="text/css">
+  		td.unselected {
+  			background-color: #CCCCCC;
+  		}
+  		td.selected {
+  			background-color: #ABB5F7;
+  		}
+  		
+  		span.usroption:active {}
+  		span.usroption:visited {}
+  		span.usroption:hover {
+  			cursor: pointer;
+  			background-color: #ABB5F7;
+  		}
+
+  	</style>
+
+  	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ static_url("json.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("jquery.session.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("mturk.js") }}"></script>
+
+</head>
+
+<body style="font-family: Georgia; font-size: 15px; margin:auto; width: 65%;">
+	<div style="margin-top: 30px;">Please answer the following questionnaire carefully.</div>
+	<hr/>
+	
+	<div style="margin-bottom: 30px;"></div>
+
+	<div style="">
+		Age: <input id="age" type="text"/>
+		<span style="margin-left:10px; margin-right:10px;">|</span>
+		Sex: <select id="sex"><option value="male">Male</option><option value="female">Female</option></select><br/>
+	</div>
+
+	<div style="margin-bottom: 30px;"></div>
+
+	<div>
+		Here are 90 characteristics that may or may not apply to you. For example, do you agree that you are someone who <u>likes to spend time with others</u>? Please tell us the extend to <u>which you agree or disagree with that statement</u>.
+
+		<div style="margin-bottom: 30px;"></div>
+		
+		<table border="0" cellpadding="10">
+			<tr no="1">
+				<td title="" style="font-size: 14px; width: 250px;">1. Is talkative</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="2">
+				<td title="" style="font-size: 14px; width: 250px;">2. Tends to find fault with others</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="3">
+				<td title="" style="font-size: 14px; width: 250px;">3. Does a thorough job</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="4">
+				<td title="" style="font-size: 14px; width: 250px;">4. Is depressed, blue</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="5">
+				<td title="" style="font-size: 14px; width: 250px;">5. Is original, comes up with new ideas</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="6">
+				<td title="" style="font-size: 14px; width: 250px;">6. Is reserved</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="7">
+				<td title="" style="font-size: 14px; width: 250px;">7. Is helpful and unselfish with others</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="8">
+				<td title="" style="font-size: 14px; width: 250px;">8. Can be somewhat careless</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="9">
+				<td title="" style="font-size: 14px; width: 250px;">9. Is relaxed, handles stress well</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="10">
+				<td title="" style="font-size: 14px; width: 250px;">10. Is curious about many different things</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+
+		<hr/><div style="margin-bottom: 30px;"></div>
+
+		<table border="0" cellpadding="10">
+			<tr no="11">
+				<td title="" style="font-size: 14px; width: 250px;">11. Is full of energy</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="12">
+				<td title="" style="font-size: 14px; width: 250px;">12. Starts quarrels with others</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="13">
+				<td title="" style="font-size: 14px; width: 250px;">13. Is a reliable worker</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="14">
+				<td title="" style="font-size: 14px; width: 250px;">14. Can be tense</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="15">
+				<td title="" style="font-size: 14px; width: 250px;">15. Is ingenious, a deep thinker</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="16">
+				<td title="" style="font-size: 14px; width: 250px;">16. Generates a lot of enthusiasm</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="17">
+				<td title="" style="font-size: 14px; width: 250px;">17. Has a forgiving nature</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="18">
+				<td title="" style="font-size: 14px; width: 250px;">18. Tends to be disorganized</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="19">
+				<td title="" style="font-size: 14px; width: 250px;">19. Worries a lot</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="20">
+				<td title="" style="font-size: 14px; width: 250px;">20. Has an active imagination</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+
+		<hr/><div style="margin-bottom: 30px;"></div>
+
+		<table border="0" cellpadding="10">
+			<tr no="21">
+				<td title="" style="font-size: 14px; width: 250px;">21. Tends to be quiet</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="22">
+				<td title="" style="font-size: 14px; width: 250px;">22. Is generally trusting</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="23">
+				<td title="" style="font-size: 14px; width: 250px;">23. Tends to be lazy</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="24">
+				<td title="" style="font-size: 14px; width: 250px;">24. Is emotionally stable, not easily upset</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="25">
+				<td title="" style="font-size: 14px; width: 250px;">25. Is inventive</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="26">
+				<td title="" style="font-size: 14px; width: 250px;">26. Has an assertive personality</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="27">
+				<td title="" style="font-size: 14px; width: 250px;">27. Can be cold and aloof</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="28">
+				<td title="" style="font-size: 14px; width: 250px;">28. Perseveres until the task is finished</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="29">
+				<td title="" style="font-size: 14px; width: 250px;">29. Can be moody</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="30">
+				<td title="" style="font-size: 14px; width: 250px;">30. Values artistic, aesthetic experiences</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+		
+		<hr/><div style="margin-bottom: 30px;"></div>
+		
+		<table border="0" cellpadding="10">
+			<tr no="31">
+				<td title="" style="font-size: 14px; width: 250px;">31. Is sometimes shy, inhibited</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="32">
+				<td title="" style="font-size: 14px; width: 250px;">32. Is considerate and kind to almost everyone</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="33">
+				<td title="" style="font-size: 14px; width: 250px;">33. Does things efficiently</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="34">
+				<td title="" style="font-size: 14px; width: 250px;">34. Remains calm in tense situations</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="35">
+				<td title="" style="font-size: 14px; width: 250px;">35. Prefers work that is routine</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="36">
+				<td title="" style="font-size: 14px; width: 250px;">36. Is outgoing, sociable</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="37">
+				<td title="" style="font-size: 14px; width: 250px;">37. Is sometimes rude to others</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="38">
+				<td title="" style="font-size: 14px; width: 250px;">38. Makes plans and follows through with them</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="39">
+				<td title="" style="font-size: 14px; width: 250px;">39. Gets nervous easily</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="40">
+				<td title="" style="font-size: 14px; width: 250px;">40. Likes to reflect, play with ideas</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+		
+		<hr/><div style="margin-bottom: 30px;"></div>
+		
+		<table border="0" cellpadding="10">
+			<tr no="41">
+				<td title="" style="font-size: 14px; width: 250px;">41. Has few artistic interests</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="42">
+				<td title="" style="font-size: 14px; width: 250px;">42. Likes to cooperate with others</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="43">
+				<td title="" style="font-size: 14px; width: 250px;">43. Is easily distracted</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="44">
+				<td title="" style="font-size: 14px; width: 250px;">44. Is sophisticated in art, music or literature</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="45">
+				<td title="" style="font-size: 14px; width: 250px;">45. I'm always trying to figure myself out</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="46">
+				<td title="" style="font-size: 14px; width: 250px;">46. I think about myself a lot</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="47">
+				<td title="" style="font-size: 14px; width: 250px;">47. I often daydream about myself</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="48">
+				<td title="" style="font-size: 14px; width: 250px;">48. I never take a hard look at myself</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="49">
+				<td title="" style="font-size: 14px; width: 250px;">49. I generally pay attention to my inner feelings</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="50">
+				<td title="" style="font-size: 14px; width: 250px;">50. I'm constantly thinking about my reasons for doing things</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+		
+		<hr/><div style="margin-bottom: 30px;"></div>
+					
+		<table border="0" cellpadding="10">
+			<tr no="51">
+				<td title="" style="font-size: 14px; width: 250px;">51. I sometimes step back in order to examine myself from a distance</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="52">
+				<td title="" style="font-size: 14px; width: 250px;">52. I'm quick to notice changes in my mood</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="53">
+				<td title="" style="font-size: 14px; width: 250px;">53. I know the way my mind works when I work through a problem</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="54">
+				<td title="" style="font-size: 14px; width: 250px;">54. I'm concerned about my style of doing things</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="55">
+				<td title="" style="font-size: 14px; width: 250px;">55. I care a lot about how I present myself to others</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="56">
+				<td title="" style="font-size: 14px; width: 250px;">56. I'm self-conscious about the way I look</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="57">
+				<td title="" style="font-size: 14px; width: 250px;">57. I usually worry about making a good impression</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="58">
+				<td title="" style="font-size: 14px; width: 250px;">58. Before I leave my house, I check how I look</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="59">
+				<td title="" style="font-size: 14px; width: 250px;">59. I'm concerned about what others think of me</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="60">
+				<td title="" style="font-size: 14px; width: 250px;">60. I'm usually aware of my appearance</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+		
+		<hr/><div style="margin-bottom: 30px;"></div>
+
+		<table border="0" cellpadding="10">
+			<tr no="61">
+				<td title="" style="font-size: 14px; width: 250px;">61. I feel tense when I'm with people I don't know well</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="62">
+				<td title="" style="font-size: 14px; width: 250px;">62. I am socially somewhat awkward</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="63">
+				<td title="" style="font-size: 14px; width: 250px;">63. I don't find it difficult to ask other people for information</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="64">
+				<td title="" style="font-size: 14px; width: 250px;">64. I'm often uncomfortable at parties and other social functions</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="65">
+				<td title="" style="font-size: 14px; width: 250px;">65. When in a group of people I have trouble thinking of the right things to talk about</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="66">
+				<td title="" style="font-size: 14px; width: 250px;">66. It doesn't take me long to overcome my shyness in new situations</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="67">
+				<td title="" style="font-size: 14px; width: 250px;">67. It's hard for me to act natural when I'm meeting new people</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="68">
+				<td title="" style="font-size: 14px; width: 250px;">68. I feel nervous when speaking to someone in authority</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="69">
+				<td title="" style="font-size: 14px; width: 250px;">69. I have no doubts about my social competence</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="70">
+				<td title="" style="font-size: 14px; width: 250px;">70. I have trouble looking someone right in the eye</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+		
+		<hr/><div style="margin-bottom: 30px;"></div>
+
+		<table border="0" cellpadding="10">
+			<tr no="71">
+				<td title="" style="font-size: 14px; width: 250px;">71. I feel inhibited in social situations</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="72">
+				<td title="" style="font-size: 14px; width: 250px;">72. I don't find it hard to talk to strangers</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="73">
+				<td title="" style="font-size: 14px; width: 250px;">73. I'm more shy with members of the opposite sex</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="74">
+				<td title="" style="font-size: 14px; width: 250px;">74. It's hard for me to work when someone is watching me</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="75">
+				<td title="" style="font-size: 14px; width: 250px;">75. I get embarrassed very easily</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="76">
+				<td title="" style="font-size: 14px; width: 250px;">76. I have no particular desire to avoid people</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="77">
+				<td title="" style="font-size: 14px; width: 250px;">77. I often find social occasions upsetting</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="78">
+				<td title="" style="font-size: 14px; width: 250px;">78. I usually feel calm and comfortable at social occasions</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="79">
+				<td title="" style="font-size: 14px; width: 250px;">79. If the chance comes to meet new people, I often take it</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="80">
+				<td title="" style="font-size: 14px; width: 250px;">80. I often feel nervous or tense in casual get-togethers in which both sexes are present</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+		
+		<hr/><div style="margin-bottom: 30px;"></div>
+
+		<table border="0" cellpadding="10">
+			<tr no="81">
+				<td title="" style="font-size: 14px; width: 250px;">81. Being introduced to people makes me tense and nervous</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="82">
+				<td title="" style="font-size: 14px; width: 250px;">82. I tend to withdraw from people</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="83">
+				<td title="" style="font-size: 14px; width: 250px;">83. I'm often able to read people's true emotions correctly through their eyes</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="84">
+				<td title="" style="font-size: 14px; width: 250px;">84. In conversations, I'm sensitive to even the slightest change in the facial expression of the person with whom I'm conversing</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="85">
+				<td title="" style="font-size: 14px; width: 250px;">85. My powers of intuition are quite good when it comes to understanding the emotions and motives of others</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="86">
+				<td title="" style="font-size: 14px; width: 250px;">86. I can usually tell when others consider a joke to be in bad taste, even though they may laugh convincingly</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="87">
+				<td title="" style="font-size: 14px; width: 250px;">87. I can usually tell when I've said something inappropriate by reading it in the listener's eyes</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="88">
+				<td title="" style="font-size: 14px; width: 250px;">88. If someone is lying to me, I usually know it at once from that person's manner of expression</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="89">
+				<td title="" style="font-size: 14px; width: 250px;">89. I consider myself to be a self-conscious person</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+			<tr no="90">
+				<td title="" style="font-size: 14px; width: 250px;">90. People tell me I am too self-conscious</td>
+				<td class="unselected"><span class="usroption" value="1">Strongly Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="2">Disagree</span></td>
+				<td class="unselected"><span class="usroption" value="3">Neutral</span></td>
+				<td class="unselected"><span class="usroption" value="4">Agree</span></td>
+				<td class="unselected"><span class="usroption" value="5">Strongly Agree</span></td>
+			</tr>
+		</table>
+		
+		<hr/><div style="margin-bottom: 30px;"></div>
+
+		<a href="#" id="submit_personality" style="margin:auto;">Click Here to Submit Answers</a>
+
+		<hr/><div style="margin-bottom: 70px;"></div>
+
+	</div>
+</body>
+
+</html>

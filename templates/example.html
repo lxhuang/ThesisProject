@@ -1,0 +1,66 @@
+
+
+<html>
+
+<head>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ static_url("json.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("jquery.session.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("swfobject.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("youtubeController.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("watch.js") }}"></script>
+
+	<style type="text/css">
+  		
+  	</style>
+
+</head>
+
+<body meta="example" style="font-family: Georgia; font-size: 15px; margin:auto; width: 75%;">
+	<div id="intro" style="margin-top: 20px;">
+		Please read the instructions carefully. You should interact with each video as follows step by step.
+		<div style="margin-bottom: 20px;"></div>
+		<hr/>
+		<ol>
+			<li>Wait until the video gets loaded</li>
+			<div style="margin-bottom: 20px;"></div>
+			
+			<li>Press the space bar to start the video</li>
+			<div style="margin-bottom: 20px;"></div>
+
+			<li>While watching, please pretend you were in a teleconference with the speaker in the video, and your task is to show interests to what he or she is telling you by providing feedback such as head nod or "uh-hum". Whenever you think it is a good time, press the space bar. The following video illustrates the process, please watch it</li>
+			<div style="margin-bottom: 20px;"></div>
+
+			<li>When the video finishes, you will be prompted to the second video automatically. Return back to step 1.</li>
+			<div style="margin-bottom: 20px;"></div>
+		</ol>
+		<div>
+			You are going to watch 8 videos (each is 2-3 minute long). When you finish watching all videos, you'll be redirected to the comment page, where you give us some comments about this experiment and get <span style="font-weight: bold;">the verification code</span>.
+		</div>
+		<div style="margin-top: 40px; margin-bottom: 15px;">Example video (Press space bar when you'd like to give feedback)</div>
+	</div>
+
+	<div style="margin-top: 10px;"></div>
+	
+	<div style="margin: auto; width: 656px;">
+	<div style="marign: auto; width: 656px; height: 496px; background-color: white;">
+		<div style="padding-left: 8px; padding-top: 8px; width: 640px;">
+			<div id = "mask" style="width: 640px; height: 480px; background-color: black; z-index: 2; position: absolute;">
+				<div id="info" style="z-index: 3; position: relative; top: 50%; color: white; font-size: 18px; margin: auto; width: 300px; text-align: center">
+				</div>
+			</div>
+			<div id = "workspace">	
+				<div id = "playercontainer">You need Flash player 10 and JavaScript enabled</div>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<div style="margin-top: 10px; text-align: center;" id="tip"></div>
+	<div style="margin-top: 15px; margin: auto; width: 300px; display: none; text-align: center;">
+		Now that you finish the example video, you should be familiar with the procedure. Follow the <a href="#" id="startButton">link</a> to start the study.
+	</div>
+
+</body>
+
+</html>
