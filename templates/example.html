@@ -3,6 +3,8 @@
 <html>
 
 <head>
+	<title>{{ escape(handler.settings["title"]) }}</title>
+
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 	<script type="text/javascript" src="{{ static_url("json.js") }}"></script>
 	<script type="text/javascript" src="{{ static_url("jquery.session.js") }}"></script>
