@@ -20,10 +20,12 @@ function showMask( $info ) {
 	$("#info").text($info);
 	
 	$("#mask").css("z-index", 2);
+	$("object").attr("width", "0")
 }
 
 function hideMask() {
 	$("#mask").css("z-index", -1);
+	$("object").attr("width", "640")
 }
 
 // visual feedback to user when he presses space bar
