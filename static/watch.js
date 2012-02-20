@@ -209,7 +209,7 @@ function onStateChangeHandler(newstate) {
 	}
 }
 function playVideo() {
-	player.setVolume(80);
+	player.setVolume(100);
 	player.seekTo(0);
 	player.playVideo();
 }

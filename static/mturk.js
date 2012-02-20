@@ -14,6 +14,16 @@ $(document).ready(function(){
 		window.location.href = $base_url + "pq";
 	});
 
+	$("span.usroption").hover(
+		function() {
+			$("span.usroption").css("cursor", "pointer");
+			$("span.usroption").css("background-color", "#ABB5F7");
+		},
+		function() {
+			$("span.usroption").css("background-color", "#EEEEEE")
+		}
+	);
+
 	$("span.usroption").click(function(){
 		$selected = $(this).attr("value");
 		
