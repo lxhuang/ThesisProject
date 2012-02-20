@@ -16,11 +16,11 @@ $(document).ready(function(){
 
 	$("span.usroption").hover(
 		function() {
-			$("span.usroption").css("cursor", "pointer");
-			$("span.usroption").css("background-color", "#ABB5F7");
+			$(this).css("cursor", "pointer");
+			$(this).css("background-color", "#ABB5F7");
 		},
 		function() {
-			$("span.usroption").css("background-color", "#EEEEEE")
+			$(this).css("background-color", "#EEEEEE")
 		}
 	);
 
