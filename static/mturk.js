@@ -1,13 +1,11 @@
 
 
-$base_url = "http://localhost:8483/";
+$base_url = "http://23.21.246.188:80/";
 
 $data = {};
 
 $(document).ready(function(){
 	
-//	for( $i = 1; $i <= 90; $i++ ) $data[$i] = $i;
-
 
 	$("#submit_amazon_turk_id").click(function(){
 		$turk_id = $("#amazon_turk_id").val();
