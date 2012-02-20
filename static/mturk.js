@@ -5,7 +5,10 @@ $base_url = "http://23.21.246.188:80/";
 $data = {};
 
 $(document).ready(function(){
-	
+	if( $.browser.msie ) {
+		alert("We don't accept Microsoft IE browser (yes, it sucks). Please use a Firefox or Chrome or Safari instead.");
+		return;
+	}
 
 	$("#submit_amazon_turk_id").click(function(){
 		$turk_id = $("#amazon_turk_id").val();
