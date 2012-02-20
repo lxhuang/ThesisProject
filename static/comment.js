@@ -1,6 +1,6 @@
 
 
-$base_url = "http://localhost:8483/";
+$base_url = "http://23.21.246.188:80/";
 
 $(document).ready(function(){
 	

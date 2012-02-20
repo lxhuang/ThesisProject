@@ -17,10 +17,10 @@ $(document).ready(function(){
 	$("span.usroption").hover(
 		function() {
 			$(this).css("cursor", "pointer");
-			$(this).css("background-color", "#ABB5F7");
+//			$(this).css("background-color", "#ABB5F7");
 		},
 		function() {
-			$(this).css("background-color", "#EEEEEE")
+//			$(this).css("background-color", "#EEEEEE")
 		}
 	);
 
