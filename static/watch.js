@@ -293,17 +293,19 @@ function loadingProgress() {
 	if( total != 0 ) {
 		var percent = parseInt((loaded/total) * 100);
 		showMask("The video is now loading. Wait (" + percent + "%)");
+
+		if( loaded == total ) {
+			clearTimeout(timer);
+
+			state = 0;
+
+			showMask("Press space bar to start");
+
+			return;
+		}
 	}
 
-	if( loaded == total ) {
-		clearTimeout(timer);
-
-		state = 0;
-
-		showMask("Press space bar to start");
-	} else {
-		setTimeout("loadingProgress()", 200);
-	}
+	setTimeout("loadingProgress()", 200);
 }
 
 function onUserEvent(evt) {
