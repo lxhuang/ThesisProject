@@ -249,7 +249,7 @@ function onStateChangeHandler(newstate) {
 			break;
 		case 2:     // paused
 			showTip("");
-			showMask("Press space bar to start");
+//			showMask("Press space bar to start");
 
 			addEvent('p');
 			state = 0;
