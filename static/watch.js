@@ -10,15 +10,14 @@ var started = 0; // whether the user starts the video or not
 // data format
 // s:tttt|b:tttt|p:tttt| (s, start; b, backchannel; p, pause)
 var dat = [];
-
+var post_data = {};
 
 function showTip($t) {
 	$("#tip").text($t);
 }
 
 function showMask( $info ) {
-	$("#info").text($info);
-	
+	$("#info").text($info);	
 	$("#mask").css("z-index", 2);
 	$("object").attr("width", "0")
 }
@@ -32,6 +31,7 @@ function hideMask() {
 function turnonFrame() {
 	$("#mask").parent().parent().css("background-color", "#3D9400");
 }
+
 function turnoffFrame() {
 	$("#mask").parent().parent().css("background-color", "#000000");	
 }
@@ -53,8 +53,9 @@ function addEvent(type) {
 	}
 }
 
-
 function onSpace() {
+	$("body").focus();
+
 	if( state == 0 ) { // stop
 
 		$('body').scrollTop( $('body').height() );
@@ -94,6 +95,8 @@ function requestNextVideo() {
 					$.session("currentVideo", dat.v);
 					
 					loadVideo();
+
+					$('body').scrollTop( 0 );
 				}
 			} else {
 				alert("Error at server side.");
@@ -101,6 +104,7 @@ function requestNextVideo() {
 		},
 		"json"
 	);
+
 }
 
 function postFeedbackData() {
@@ -137,15 +141,63 @@ function onComplete() {
 			"tid=" + $.session("turkID") + "&act=1",
 			function(dat) {
 				if( dat.res == "success" ) {
-					requestNextVideo();
+					
+					showPostQuestionnaire();
+
+					$('body').scrollTop( $('body').height() );
+
 				} else {
-					alert("Error at server side. Cannot delete the video");
+					alert("Error at server side. Cannot delete the video. Refresh the page please.");
 				}
 			},
 			"json"
 		)
 
 	}
+}
+
+function showPostQuestionnaire() {
+
+	showMask("Please finish the questionnaire below");
+	
+	$("#pq").show();
+
+}
+
+function submitPostQuestion() {
+	
+	var size = 0;
+	for( key in post_data ) {
+		if( post_data.hasOwnProperty(key) )
+			size++;
+	}
+	if( size != 6 ) {
+		alert("Please finish all the questions");
+		return false;
+	}
+
+	$psi = "";
+	for( i = 1; i <= size; i++ ) {
+		$psi += post_data[i];
+	}
+
+	$.post(
+		$base_url+"psi",
+		"tid=" + $.session("turkID") + "&vid=" + $.session("currentVideo") + "&psi=" + $psi,
+		function(dat) {
+			if( dat.success ) {
+				$("#pq").hide();
+
+				post_data = {};
+
+				$("tr").find("td:gt(0)").attr("class", "unselected");
+
+				requestNextVideo();	
+			}
+		},
+		"json"
+	);
+	return true;
 }
 
 /////// Video related manipulation /////////
@@ -160,6 +212,7 @@ function onYouTubePlayerReady( playerId ) {
 	loadVideo();
 
 }
+
 function onErrorHandler(code) {
 	switch(code) {
 		case 2:
@@ -176,6 +229,7 @@ function onErrorHandler(code) {
 			break;
 	}
 }
+
 function onStateChangeHandler(newstate) {
 	switch(newstate) {
 		case -1:    // unstarted
@@ -208,18 +262,20 @@ function onStateChangeHandler(newstate) {
 			break;
 	}
 }
+
 function playVideo() {
 	player.setVolume(100);
 	player.seekTo(0);
 	player.playVideo();
 }
+
 function loadVideo() {
 	if( $.session("currentVideo") == undefined ) {
 		player.mute();
-		player.loadVideoById("Uhl3F8QvbzQ");
+		player.loadVideoById("rMICjUA4piA");
 	} else {
 		$("#intro").remove();
-		$("#tip").next().remove();
+		$("#once").remove();
 		player.mute();
 		player.loadVideoById($.session("currentVideo"));
 	}
@@ -229,7 +285,6 @@ function loadVideo() {
 	showMask("The video is now loading. Wait...");
 	state = 2;
 }
-
 
 function loadingProgress() {
 	var loaded = player.getVideoBytesLoaded();
@@ -341,12 +396,39 @@ function onUserEvent(evt) {
 }
 
 $(document).ready(function(){
+
+	$("span.usroption").click(function(){
+		$selected = $(this).attr("value");
+		
+		$index = $(this).parent().parent().attr("no");
+		
+		$(this).parent().parent().find("td:gt(0)").attr("class", "unselected");
+
+		$(this).parent().attr("class", "selected");
+
+		post_data[parseInt($index)] = $selected;
+	});
+
+	$("span.usroption").hover(
+		function() {
+			$("span.usroption").css("cursor", "pointer");
+		},
+		function() {}
+	);
 	
 	$("#startButton").click(function(){
 		
 		requestNextVideo();
 		
 		return false;
+	});
+
+	$("#nextButton").click(function(){
+		
+		submitPostQuestion();
+
+		return false;
+
 	});
 
 	document.onkeydown = function(evt) {

@@ -16,6 +16,7 @@ from ExampleHandler import ExampleHandler
 from TaskHandler import TaskHandler
 from WatchHandler import WatchHandler
 from CommentHandler import CommentHandler
+from PSIHandler import PSIHandler
 
 define("port", default=8483, type=int)
 define("mysql_host", default="127.0.0.1:3306")
@@ -32,6 +33,7 @@ class Application(tornado.web.Application):
 			(r"/task", TaskHandler),
 			(r"/watch", WatchHandler),
 			(r"/comment", CommentHandler),
+			(r"/psi", PSIHandler),
 		]
 
 		settings = dict(

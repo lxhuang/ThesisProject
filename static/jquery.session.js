@@ -35,9 +35,9 @@
 		var domain 			= location.href.match(/\w+:\/\/[^\/]+/)[0];
 		var referrer 		= (document.referrer) ? document.referrer.match(/\w+:\/\/[^\/]+/)[0] : "";
 
-//		if(referrer == "" || referrer !== domain) {
-//			window.name = window.name.replace("#"+domain+"#", "");
-//		}
+		if(referrer == "" || referrer !== domain) {
+			window.name = window.name.replace("#"+domain+"#", "");
+		}
 			
 		function loadData() {
 			stored = window.name.split("#"+domain+"#");
