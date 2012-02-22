@@ -5,26 +5,27 @@ $base_url = "http://23.21.246.188:80/";
 $data = {};
 
 $(document).ready(function(){
+
 	if( $.browser.msie ) {
 		alert("We don't accept Microsoft IE browser (yes, it sucks). Please use a Firefox or Chrome or Safari instead.");
 		return;
 	}
+	
+//	for( $i = 1; $i <= 90; $i++ ) $data[$i] = $i;
 
 	$("#submit_amazon_turk_id").click(function(){
 		$turk_id = $("#amazon_turk_id").val();
 		$.session("turkID", $turk_id);
 
-		window.location.href = $base_url + "pq";
+		window.location.href = $base_url + "pq";		
+
 	});
 
 	$("span.usroption").hover(
 		function() {
-			$(this).css("cursor", "pointer");
-//			$(this).css("background-color", "#ABB5F7");
+			$("span.usroption").css("cursor", "pointer");
 		},
-		function() {
-//			$(this).css("background-color", "#EEEEEE")
-		}
+		function() {}
 	);
 
 	$("span.usroption").click(function(){
