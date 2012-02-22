@@ -3,7 +3,7 @@ $base_url = "http://23.21.246.188:80/";
 
 var timer = null;
 
-var state = 0;	//0: stop; 1:playing, 2:end
+var state = 0;	//0: stopped; 1:playing, 2:end, 3:buffering, 4:buffered
 
 var started = 0; // whether the user starts the video or not
 
@@ -37,45 +37,36 @@ function turnoffFrame() {
 }
 
 function addEvent(type) {
-	$time = (new Date()).getTime();
-	switch(type) {
-		case 's':
-			dat.push( 's:'+$time );
-			break;
-		case 'b':
-			dat.push( 'b:'+$time );
-			break;
-		case 'p':
-			dat.push( 'p:'+$time );
-			break;
-		default:
-			break;
-	}
+	time = (new Date()).getTime();
+
+	dat.push( type + ":" + time );
 }
 
 function onSpace() {
 	$("body").focus();
 
-	if( state == 0 ) { // stop
-
-		$('body').scrollTop( $('body').height() );
-
+	if( state == 0 || state == 4 ) { // stopped or buffered
 		addEvent('s');
-		
-		playVideo();
-		
-		hideMask();
 		
 		state = 1;
 		started = 1;
 
+		hideMask();
 		showTip("Press space bar when you'd like to give feedback");
+
+		if( state == 0 ) {
+			playVideo();
+		} else {
+			resumeVideo();
+		}
+
+		$('body').scrollTop( $('body').height() );
 
 	} else if (state == 1) { // playing
 		addEvent('b');
 
 		turnonFrame();
-	} else { // end
+	} else {
 		
 	}
 }
@@ -128,11 +119,10 @@ function onComplete() {
 		
 		showMask("Example video finished");
 
-		$("#tip").next().show();
+		$("#once").show();
 
 		$('body').scrollTop( $('body').height() );
 	} else {
-
 		postFeedbackData();
 		
 		// tell the server this video is done
@@ -147,12 +137,13 @@ function onComplete() {
 					$('body').scrollTop( $('body').height() );
 
 				} else {
+					$.session("turkID", $.session("turkID"));
+					$.session("currentVideo", $.session("currentVideo"));
 					alert("Error at server side. Cannot delete the video. Refresh the page please.");
 				}
 			},
 			"json"
-		)
-
+		);
 	}
 }
 
@@ -247,14 +238,21 @@ function onStateChangeHandler(newstate) {
 			break;
 		case 1:     // playing
 			break;
-		case 2:     // paused
-			showTip("");
-//			showMask("Press space bar to start");
-
-			addEvent('p');
-			state = 0;
+		case 2:     // paused (should never happen)
 			break;
 		case 3:     // buffering
+			showTip("");
+			showMask("The video is now loading. Wait...");
+
+			addEvent('p');
+			
+			started = 0;
+			state = 3;
+
+			stopVideo();
+
+			bufferingProcess( player.getVideoBytesLoaded() );
+
 			break;
 		case 5:     // cued
 			break;
@@ -267,6 +265,16 @@ function playVideo() {
 	player.setVolume(100);
 	player.seekTo(0);
 	player.playVideo();
+}
+
+function resumeVideo() {
+	player.setVolume(100);
+	player.playVideo();
+}
+
+function stopVideo() {
+	player.mute();
+	player.stopVideo();
 }
 
 function loadVideo() {
@@ -286,16 +294,28 @@ function loadVideo() {
 	state = 2;
 }
 
+function bufferingProcess(curr) {
+	var loaded = player.getVideoBytesLoaded();
+	var total  = player.getVideoBytesTotal();
+	if( (loaded - curr) >= total/10 ) {
+		state = 4; // buffered
+
+		showMask("Press space bar to start");
+
+		return;
+	}
+	setTimeout("bufferingProcess(" + curr + ")", 200);
+}
+
 function loadingProgress() {
 	var loaded = player.getVideoBytesLoaded();
 	var total  = player.getVideoBytesTotal();
 	
 	if( total != 0 ) {
 		var percent = parseInt((loaded/total) * 100);
-		showMask("The video is now loading. Wait (" + percent + "%)");
+		showMask("The video is now loading. Wait...");
 
-		if( loaded == total ) {
-			clearTimeout(timer);
+		if( loaded >= total/10 ) { // change it to 10%?
 
 			state = 0;
 
