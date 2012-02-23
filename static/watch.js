@@ -177,7 +177,7 @@ function submitPostQuestion() {
 
 				post_data = {};
 
-				$("tr").find("td:gt(0)").attr("class", "unselected");
+				$("tr").find("td:gt(0)").attr("class", "unselected usroption");
 
 				requestNextVideo();	
 			}
