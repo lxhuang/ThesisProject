@@ -37,7 +37,7 @@ class CommentHandler(tornado.web.RequestHandler):
 			feedback = self.db.query(
 				"SELECT * FROM feedback WHERE turkID = %s", turkId
 			)
-			if len(feedback) < 2:
+			if len(feedback) < 8:
 				self.write( "{\"err\" : \"you have not finished all videos yet\"}" )
 				return None
 
