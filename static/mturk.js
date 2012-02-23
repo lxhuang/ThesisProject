@@ -21,21 +21,21 @@ $(document).ready(function(){
 
 	});
 
-	$("span.usroption").hover(
+	$("td.usroption").hover(
 		function() {
-			$("span.usroption").css("cursor", "pointer");
+			$("td.usroption").css("cursor", "pointer");
 		},
 		function() {}
 	);
 
-	$("span.usroption").click(function(){
-		$selected = $(this).attr("value");
+	$("td.usroption").click(function(){
+		$selected = $(this).find("span").attr("value");
 		
-		$index = $(this).parent().parent().attr("no");
+		$index = $(this).parent().attr("no");
 		
-		$(this).parent().parent().find("td:gt(0)").attr("class", "unselected");
+		$(this).parent().find("td:gt(0)").attr("class", "unselected usroption");
 
-		$(this).parent().attr("class", "selected");
+		$(this).attr("class", "selected usroption");
 
 		$data[parseInt($index)] = $selected;
 	});
