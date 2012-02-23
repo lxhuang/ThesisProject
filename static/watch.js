@@ -3,7 +3,7 @@ $base_url = "http://23.21.246.188:80/";
 
 var timer = null;
 
-var state = 0;	//0: stopped; 1:playing, 2:end, 3:buffering, 4:buffered
+var state = 0;	//0: stopped; 1:playing, 2:end
 
 var started = 0; // whether the user starts the video or not
 
@@ -45,7 +45,7 @@ function addEvent(type) {
 function onSpace() {
 	$("body").focus();
 
-	if( state == 0 || state == 4 ) { // stopped or buffered
+	if( state == 0 ) { // stop
 		addEvent('s');
 		
 		state = 1;
@@ -54,11 +54,7 @@ function onSpace() {
 		hideMask();
 		showTip("Press space bar when you'd like to give feedback");
 
-		if( state == 0 ) {
-			playVideo();
-		} else {
-			resumeVideo();
-		}
+		playVideo();
 
 		$('body').scrollTop( $('body').height() );
 
@@ -241,18 +237,6 @@ function onStateChangeHandler(newstate) {
 		case 2:     // paused (should never happen)
 			break;
 		case 3:     // buffering
-			showTip("");
-			showMask("The video is now loading. Wait...");
-
-			addEvent('p');
-			
-			started = 0;
-			state = 3;
-
-			stopVideo();
-
-			bufferingProcess( player.getVideoBytesLoaded() );
-
 			break;
 		case 5:     // cued
 			break;
@@ -267,16 +251,6 @@ function playVideo() {
 	player.playVideo();
 }
 
-function resumeVideo() {
-	player.setVolume(100);
-	player.playVideo();
-}
-
-function stopVideo() {
-	player.mute();
-	player.stopVideo();
-}
-
 function loadVideo() {
 	if( $.session("currentVideo") == undefined ) {
 		player.mute();
@@ -288,23 +262,10 @@ function loadVideo() {
 		player.loadVideoById($.session("currentVideo"));
 	}
 
-	timer = setTimeout("loadingProgress()", 200);
-	
 	showMask("The video is now loading. Wait...");
 	state = 2;
-}
 
-function bufferingProcess(curr) {
-	var loaded = player.getVideoBytesLoaded();
-	var total  = player.getVideoBytesTotal();
-	if( (loaded - curr) >= total/10 ) {
-		state = 4; // buffered
-
-		showMask("Press space bar to start");
-
-		return;
-	}
-	setTimeout("bufferingProcess(" + curr + ")", 200);
+	timer = setTimeout("loadingProgress()", 200);
 }
 
 function loadingProgress() {
@@ -313,9 +274,9 @@ function loadingProgress() {
 	
 	if( total != 0 ) {
 		var percent = parseInt((loaded/total) * 100);
-		showMask("The video is now loading. Wait...");
+		showMask("The video is now loading. Wait (" + percent + "%)");
 
-		if( loaded >= total/10 ) { // change it to 10%?
+		if( loaded >= total/2 ) {
 
 			state = 0;
 
