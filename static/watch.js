@@ -295,7 +295,7 @@ function onUserEvent(evt) {
 	if( evt.keyCode == 32 ) {
 		onSpace();
 
-		document.onkeydown = function(evt) {}
+		window.onkeydown = function(evt) {}
 	}
 }
 
@@ -336,15 +336,15 @@ $(document).ready(function(){
 
 	});
 
-	document.onkeydown = function(evt) {
+	window.onkeydown = function(evt) {
 		onUserEvent(evt);
 	}
 
-	document.onkeyup = function(evt) {
+	window.onkeyup = function(evt) {
 		if( !evt ) evt = window.event;
 		if( evt.keyCode == 32 ) {
 			turnoffFrame();
-			document.onkeydown = function(evt) {
+			window.onkeydown = function(evt) {
 				onUserEvent(evt);
 			}
 		}
