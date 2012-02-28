@@ -254,7 +254,7 @@ function playVideo() {
 function loadVideo() {
 	if( $.session("currentVideo") == undefined ) {
 		player.mute();
-		player.loadVideoById("rMICjUA4piA");
+		player.loadVideoById("oc5dJlRw6vU");
 	} else {
 		$("#intro").remove();
 		$("#once").remove();
