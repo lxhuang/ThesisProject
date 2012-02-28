@@ -16,11 +16,11 @@ from WatchHandler import WatchHandler
 from CommentHandler import CommentHandler
 from PSIHandler import PSIHandler
 
-define("port", default=8483, type=int)
+define("port", default=80, type=int)
 define("mysql_host", default="127.0.0.1:3306")
 define("mysql_database", default="mturk")
 define("mysql_user", default="root")
-define("mysql_password", default="")
+define("mysql_password", default="rhubarb")
 
 class Application(tornado.web.Application):
 	def __init__(self):
@@ -36,7 +36,7 @@ class Application(tornado.web.Application):
 
 		settings = dict(
 			title = "University of Southern California, Human Behavior Study",
-			base_url = "http://localhost:8483/",
+			base_url = "http://23.21.246.188:80/",
 			static_path = os.path.join(os.path.dirname(__file__), "static"),
 			template_path = os.path.join(os.path.dirname(__file__), "templates"),
 		)

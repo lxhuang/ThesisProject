@@ -13,11 +13,11 @@ var dat = [];
 var post_data = {};
 
 function showTip($t) {
-	$("#tip").text($t);
+	$("#tip").html($t);
 }
 
 function showMask( $info ) {
-	$("#info").text($info);	
+	$("#info").html($info);	
 	$("#mask").css("z-index", 2);
 	$("object").attr("width", "0")
 }
@@ -52,7 +52,7 @@ function onSpace() {
 		started = 1;
 
 		hideMask();
-		showTip("Press space bar when you'd like to give feedback");
+		showTip("Press space bar when you'd like to give feedback<br/>Don't move your mouse over the player area");
 
 		playVideo();
 
@@ -254,7 +254,7 @@ function playVideo() {
 function loadVideo() {
 	if( $.session("currentVideo") == undefined ) {
 		player.mute();
-		player.loadVideoById("rMICjUA4piA");
+		player.loadVideoById("oc5dJlRw6vU");
 	} else {
 		$("#intro").remove();
 		$("#once").remove();
@@ -280,7 +280,7 @@ function loadingProgress() {
 
 			state = 0;
 
-			showMask("Press space bar to start");
+			showMask("Press space bar to start <br/> Don't move your mouse over the player area");
 
 			return;
 		}
