@@ -24,6 +24,6 @@ class ExampleHandler(tornado.web.RequestHandler):
 			return None
 		else:
 			if int(user["uid"]) == int(uid):
-				self.render("example.html")
+				self.render("example.html", turkID=turkId)
 				return None
 			return None

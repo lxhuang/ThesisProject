@@ -301,6 +301,8 @@ function onUserEvent(evt) {
 
 $(document).ready(function(){
 
+	$.session("turkID", $("#turkID").attr("value"));
+
 	$("td.usroption").click(function(){
 		
 		$selected = $(this).find("span").attr("value");
