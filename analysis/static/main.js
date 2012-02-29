@@ -1,18 +1,31 @@
 
 var base_url = "http://localhost:8483/";
-
-var TYPE_CODERLIST   = 0;
-var TYPE_VIDEOLIST   = 1;
-var TYPE_DATABYVIDEO = 2;
-var TYPE_DATABYCODER = 3;
-
 var canvas_height = 200;
 
-var video_table = null, coder_table = null;
-var video_data  = null, coder_data  = null;
+var TYPE_CODERLIST   = 0,
+	TYPE_VIDEOLIST   = 1,
+	TYPE_DATABYVIDEO = 2,
+	TYPE_DATABYCODER = 3,
+	TYPE_CODERPSI    = 4;
+
+var EXTROVERSION      = "1",
+	AGREEABLENESS     = "2",
+	CONSCIENTIOUSNESS = "3",
+	NEUROTICISM       = "4",
+	OPENNESS          = "5",
+	SELFCONSCIOUS     = "6",
+	OTHERFOCUS        = "7",
+	SHYNESS           = "8",
+	SELFMONITOR       = "9";
+
+var video_table = null, 
+	coder_table = null, 
+	video_data  = null, 
+	coder_data  = null;
 
 var coder_buffer = {};
 var video_buffer = {};
+var coder_info_buffer = {};
 
 var paper_set = [];
 var indicator = [];
@@ -53,6 +66,9 @@ function createPaper(dat, paper_id, w, h) {
 	var paper = Raphael(document.getElementById(paper_id), w, h);
 	paper_set.push(paper)
 
+	// background
+	bg = paper.path("M0,0").attr({stroke: "none", opacity: .3});
+
 	// dat is an array, representing the time line of the video (sample rate is 100ms)
 	x = 0;
 	y = dat[0] / max * h;
@@ -66,6 +82,10 @@ function createPaper(dat, paper_id, w, h) {
 	// draw the histogram
 	p = paper.path(str);
 	p.attr({"stroke": "#11ED3D", "stroke-width":2});
+	bg.attr( {
+		path: str + "L" + w + "," + h + "L0," + h + "Z",
+		fill: "#11ED3D"
+	} );
 
 	// print the paper ID
 	paper.text(50, 10, paper_id);
@@ -223,11 +243,30 @@ function requestCoderList() {
 		"type="+TYPE_CODERLIST,
 		function(coderSet) {
 			coder_data = new google.visualization.DataTable();
+			
 			coder_data.addColumn( "string", "TurkID" );
+			coder_data.addColumn( "string", "Attr" );
+			
 			coder_data.addRows( coderSet.length );
 			for( i=0; i<coderSet.length; i++ ) {
 				var turkId = coderSet[i]["turkID"];
+				
+				coder_info_buffer[turkId] = {};
+				coder_info_buffer[turkId]["gender"]	= coderSet[i]["gender"];
+				coder_info_buffer[turkId]["age"] = coderSet[i]["age"];
+				coder_info_buffer[turkId]["1"] = coderSet[i]["1"];
+				coder_info_buffer[turkId]["2"] = coderSet[i]["2"];
+				coder_info_buffer[turkId]["3"] = coderSet[i]["3"];
+				coder_info_buffer[turkId]["4"] = coderSet[i]["4"];
+				coder_info_buffer[turkId]["5"] = coderSet[i]["5"];
+				coder_info_buffer[turkId]["6"] = coderSet[i]["6"];
+				coder_info_buffer[turkId]["7"] = coderSet[i]["7"];
+				coder_info_buffer[turkId]["8"] = coderSet[i]["8"];
+				coder_info_buffer[turkId]["9"] = coderSet[i]["9"];
+				coder_info_buffer[turkId]["psi"] = {};
+
 				coder_data.setCell(i, 0, turkId);
+				coder_data.setCell(i, 1, coderSet[i]["gender"]);
 			}
 
 			coder_table = new google.visualization.Table(document.getElementById("codertable"));
@@ -254,7 +293,7 @@ function getSelectedVideo() {
 	videos = [];
 	if( selection.length > 1 ) {
 		alert( "you're only allowed to select one video once" );
-		return;
+		return null;
 	}
 
 	for( i=0; i<selection.length; i++ ) {
@@ -292,6 +331,59 @@ function requestVideoList() {
 	);
 }
 
+
+function updatePSIAttr(video) {
+	if( coder_data ) {
+		rowNum = coder_data.getNumberOfRows();
+		for( i=0; i<rowNum; i++ ) {
+			turkId = coder_data.getValue(i, 0);
+			attrValue = coder_info_buffer[turkId]["psi"][video];
+			coder_data.setCell(i, 1, ""+attrValue);
+		}
+		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "200px"});
+	}
+}
+
+function updateCoderPSI() {
+	video = getSelectedVideo();
+	if( video == null ) return;
+
+	if( coder_info_buffer[ coder_data.getValue(0,0) ]["psi"][video] ) {
+		updatePSIAttr(video);
+	} else {
+		$.post(
+			base_url,
+			"type=" + TYPE_CODERPSI + "&vid=" + video,
+			function(dat) {
+				for( i=0; i<dat.length; i++ ) {
+					turkId = dat[i]["turkID"];
+					psi    = dat[i]["psi"];
+					coder_info_buffer[turkId]["psi"][video] = psi;
+				}
+				updatePSIAttr(video);
+			},
+			"json"
+		);	
+	}
+}
+
+function updateCoderAttribute(attr) {
+	if( coder_data ) {
+		rowNum = coder_data.getNumberOfRows();
+		for( i=0; i<rowNum; i++ ) {
+			turkId = coder_data.getValue(i, 0);
+			
+			if( coder_info_buffer[turkId] && coder_info_buffer[turkId][attr] )
+				attrValue = coder_info_buffer[turkId][attr];
+			else
+				continue;
+
+			coder_data.setCell(i, 1, ""+attrValue);
+		}
+		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "200px"});
+	}
+}
+
 google.load('visualization', '1', {packages:['table']});
 google.setOnLoadCallback(function(){
 	requestCoderList();
@@ -324,6 +416,14 @@ $(document).ready(function(){
 		return false;
 	});
 
+	$("#attr").change(function() {
+		attr = $("#attr option:selected").val();
+		if( attr == "psi" ) {
+			updateCoderPSI();
+		} else {
+			updateCoderAttribute(attr);
+		}
+	} );
 
 });
 
