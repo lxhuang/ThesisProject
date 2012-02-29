@@ -217,6 +217,8 @@ function onErrorHandler(code) {
 	}
 }
 
+var paused = 0;
+
 function onStateChangeHandler(newstate) {
 	switch(newstate) {
 		case -1:    // unstarted
@@ -233,8 +235,14 @@ function onStateChangeHandler(newstate) {
 			}
 			break;
 		case 1:     // playing
+			if( paused == 1 ) {
+				addEvent('c');
+				paused = 0;
+			}
 			break;
 		case 2:     // paused (should never happen)
+			addEvent('pp');
+			paused = 1;
 			break;
 		case 3:     // buffering
 			break;
