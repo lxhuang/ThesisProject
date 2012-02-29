@@ -144,7 +144,7 @@ function onSelectVideo(video) {
 	var w = $("#paint").width();
 
 	if( video_buffer[video] ) {
-		createPaper( video_buffer[video], "total_view", w, canvas_height );
+		createPaper( video_buffer[video], "consensus view", w, canvas_height );
 		return;
 	}
 
@@ -153,7 +153,7 @@ function onSelectVideo(video) {
 		"type=" + TYPE_DATABYVIDEO + "&vid=" + video,
 		function(dat) {
 			video_buffer[video] = dat;
-			createPaper(dat, "total_view", w, canvas_height);
+			createPaper(dat, "consensus view", w, canvas_height);
 		},
 		"json"
 	);
