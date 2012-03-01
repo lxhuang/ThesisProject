@@ -231,6 +231,7 @@ function onStateChangeHandler(newstate) {
 				addEvent('p');
 				state = 2;
 				started = 0;
+				paused = 0;
 				onComplete();
 			}
 			break;
