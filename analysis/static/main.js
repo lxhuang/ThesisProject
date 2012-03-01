@@ -191,6 +191,7 @@ function addMessage(msg, clr, uuid) {
 	}
 
 	$("#messagebox").append( $new_message );
+	$("#messagebox").scrollTop( 2000 );
 }
 
 function newMessage( msg ) {
@@ -661,9 +662,9 @@ google.setOnLoadCallback(function(){
 
 function restoreStateVideoTime(time) {
 	if( video_ready == 1 ) {
-		player.seekTo(parseFloat(time), true);
 		player.setVolume(100);
 		player.playVideo();
+		player.seekTo(parseFloat(time), true);
 	} else {
 		setTimeout( "restoreStateVideoTime(" + time + ")", 100 );
 	}
@@ -810,7 +811,8 @@ $(document).ready(function(){
 	$("#closeNote").click( function() {$("#notes").hide();} );
 
 	updater.poll();
-
+	notice = "c:" + $("#palette").attr("value") + "|a new guest enters";
+	newMessage( notice );
 });
 
 
