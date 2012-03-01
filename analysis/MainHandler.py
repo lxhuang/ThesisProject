@@ -144,7 +144,7 @@ class MainHandler(tornado.web.RequestHandler):
 					for i in range(1,len(f)-1):
 						elapse = long(f[i].split(":")[1]) - beg
 						if elapse > video_len+1000:
-							print vid, "\t", coder["turkID"], "\tis outliner"
+							print vid, "\t", coder["turkID"], "\tis outlier"
 							message.append( vid + "," + coder["turkID"] )
 							outliner = 1
 							break;
@@ -171,7 +171,7 @@ class MainHandler(tornado.web.RequestHandler):
 				end = long( f[-1].split(":")[1] )
 				
 				ts_set = []
-				
+
 				# time series of this coder
 				ts  = []
 				for i in range(1,len(f)-1):
