@@ -538,10 +538,19 @@ function addMark(mid, comment) {
 		} );
 
 	del = $("<span>").text("X")
-					 .css({
-					 	"margin-left": "2px",
+					 .css( {
+					 	"font-size": "11px",
+					 	"margin-left": "4px",
 					 	"color": "red"
-					 })
+					 } )
+					 .hover(
+					 	function() {
+					 		$(this).css("cursor", "pointer");
+					 	},
+					 	function() {
+					 		$(this).removeClass("cursor");
+					 	}
+					 )
 					 .click(function() {
 					 	_mid = $(this).parent().attr("mid");
 					 	$.post(
@@ -557,8 +566,9 @@ function addMark(mid, comment) {
 	$("#notes").append(
 		$("<div>")
 		.css({
-			"font-family": "Georgia", 
-			"font-size": "13px"
+			"font-size": "13px",
+			"font-family": "Arial",
+			"margin-bottom": "5px"
 		})
 		.attr("mid", mid)
 		.append(a)
