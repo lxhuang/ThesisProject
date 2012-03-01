@@ -1,5 +1,5 @@
 
-var base_url = "http://localhost:8483/";
+var base_url = "http://23.21.246.188:80/";
 var canvas_height = 200;
 
 var TYPE_CODERLIST   = 0,
