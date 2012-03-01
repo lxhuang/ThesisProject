@@ -11,9 +11,14 @@
 </head>
 
 <body>
-	<div style="margin-bottom: 50px;"></div>
+	<div>
+		<div style="background-color: #ABB5F7; width: 400px; text-align: center; font-size: 15px; font-family: arial;" id="openNote">Temp Notes</div>
+		<div style="display: none; width: 400px; height: 2000px; background-color: #ABB5F7; z-index: 2;" id="notes">
+			<span style="float:right; font-weight: bold; font-family: arial;" id="closeNote">X</span>
+		</div>
+	</div>
 
-	<div style="margin: auto; width: 1200px;">
+	<div style="margin: auto; width: 1200px; margin-top: 20px;">
 		<div id="workspace" style="width: 320px; height: 240px; float: left; margin-right: 10px;">
 			<div id = "mask" style="width: 320px; height: 240px; background-color: black; z-index: 2; position: absolute;">
 				<div id="info" style="z-index: 3; position: relative; top: 50%; color: white; font-size: 14px; margin: auto; width: 300px; text-align: center">
