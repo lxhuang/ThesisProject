@@ -245,6 +245,8 @@ function onStateChangeHandler(newstate) {
 			paused = 1;
 			break;
 		case 3:     // buffering
+			addEvent('pp');
+			paused = 1;
 			break;
 		case 5:     // cued
 			break;
