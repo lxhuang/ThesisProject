@@ -242,14 +242,18 @@ function onStateChangeHandler(newstate) {
 			}
 			break;
 		case 2:     // paused (should never happen)
-			addEvent('pp');
-			state = 3;
-			paused = 1;
+			if( started == 1 ) {
+				addEvent('pp');
+				state = 3;
+				paused = 1;
+			}
 			break;
 		case 3:     // buffering
-			addEvent('pp');
-			state = 3;
-			paused = 1;
+			if( started == 1 ) {
+				addEvent('pp');
+				state = 3;
+				paused = 1;
+			}
 			break;
 		case 5:     // cued
 			break;
