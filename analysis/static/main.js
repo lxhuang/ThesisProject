@@ -275,7 +275,7 @@ function onSelectCoder(coders) {
 
 	$.each( coders, function(index, value) {
 		if( outliner_buffer[selectedVideo+","+value] ) {
-			alert( value+" is outliner" );
+			alert( value+" is outlier" );
 			return;
 		}
 
@@ -332,7 +332,7 @@ function onSelectVideo(video) {
 			}
 			if( dat.outliner ) {
 				$.each(dat.outliner, function(index, value) {
-					addMessage("[outliner] "+value, "red");
+					addMessage("[outlier] "+value, "red");
 					outliner_buffer[ value ] = 1; // vid->turkId
 				} );
 			}
@@ -821,7 +821,7 @@ $(document).ready(function(){
 	$("#closeNote").click( function() {$("#notes").hide();} );
 
 	updater.poll();
-	notice = "c:" + $("#palette").attr("value") + "|a new guest enters";
+	notice = "c:" + $("#palette").attr("value") + "|a new guest comes";
 	newMessage( notice );
 });
 
