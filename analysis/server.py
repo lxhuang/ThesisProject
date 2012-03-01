@@ -8,6 +8,9 @@ import tornado.web
 from tornado.options import define, options
 
 from MainHandler import MainHandler
+from UpdateHandler import UpdateHandler
+from UpdateHandler import NewMessageHandler
+from MarkHandler import MarkHandler
 
 define("port", default=80, type=int)
 define("mysql_host", default="127.0.0.1:3306")
@@ -19,6 +22,9 @@ class Application(tornado.web.Application):
 	def __init__(self):
 		handlers = [
 			(r"/", MainHandler),
+			(r"/new", NewMessageHandler),
+			(r"/update", UpdateHandler),
+			(r"/mark", MarkHandler),
 		]
 
 		settings = dict(

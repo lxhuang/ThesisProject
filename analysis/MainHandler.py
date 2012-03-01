@@ -92,98 +92,109 @@ class MainHandler(tornado.web.RequestHandler):
 		self.render("main.html")
 
 	def post(self):
-		t = self.get_argument("type", None)
-		vid = self.get_argument("vid", None)
-		turkId = self.get_argument("turkId", None)
+		try:
 
-		if not t:
-			return None
+			t = self.get_argument("type", None)
+			vid = self.get_argument("vid", None)
+			turkId = self.get_argument("turkId", None)
 
-		t = int(t)
-		if t == Type.CODERLIST:
-			coders = self.db.query("SELECT distinct turkID FROM verify")
+			if not t:
+				return None
 
-			for coder in coders:
-				p = self.db.get("SELECT * FROM personality WHERE turkID = %s", coder["turkID"])
-				coder["gender"] = p["sex"][0]
-				coder["age"] = p["age"]
-				self.measure(p["personality"], coder)
+			t = int(t)
+			if t == Type.CODERLIST:
+				coders = self.db.query("SELECT distinct turkID FROM verify")
 
-			self.write( json.dumps( coders ) )
-		
-		elif t == Type.VIDEOLIST:
-			videos = self.db.query("SELECT distinct vid FROM psi")
-			self.write( json.dumps( videos ) )
-		
-		elif t == Type.DATABYVIDEO:
-			coders = self.db.query("SELECT distinct turkID FROM verify")
+				for coder in coders:
+					p = self.db.get("SELECT * FROM personality WHERE turkID = %s", coder["turkID"])
+					coder["gender"] = p["sex"][0]
+					coder["age"] = p["age"]
+					self.measure(p["personality"], coder)
+
+				self.write( json.dumps( coders ) )
 			
-			# time series data from all coders
-			ts_set = []
-
-			video_len = 99999999
-
-			outliner = 0
-
-			for coder in coders:
-				f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder["turkID"], vid)
-				f = f["feedback"].split(",")
+			elif t == Type.VIDEOLIST:
+				videos = self.db.query("SELECT distinct vid FROM psi")
+				self.write( json.dumps( videos ) )
+			
+			elif t == Type.DATABYVIDEO:
+				coders = self.db.query("SELECT distinct turkID FROM verify")
 				
+				# time series data from all coders
+				ts_set = []
+				# messages sent back to the client
+				message = []
+
+				video_len = 99999999
+
+				outliner = 0
+
+				for coder in coders:
+					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder["turkID"], vid)
+					f = f["feedback"].split(",")
+					
+					beg = long( f[0].split(":")[1] )
+					end = long( f[-1].split(":")[1] )
+					
+					if end - beg < video_len: video_len = end - beg
+
+					# time series of this coder
+					ts  = []
+
+					for i in range(1,len(f)-1):
+						elapse = long(f[i].split(":")[1]) - beg
+						if elapse > video_len+1000:
+							print vid, "\t", coder["turkID"], "\tis outliner"
+							message.append( vid + "," + coder["turkID"] )
+							outliner = 1
+							break;
+						else:
+							ts.append( elapse )
+
+					#print coder["turkID"], "=>", ts
+					if outliner == 0:
+						ts_set.append(ts)
+					else:
+						outlinter = 0
+				
+				res = self.aggregate(ts_set, video_len)
+
+				ret = {'outliner': message, 'res': res}
+
+				self.write( json.dumps(ret) )
+			
+			elif t == Type.DATABYCODER:
+				f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", turkId, vid)
+				f = f["feedback"].split(",")
+
 				beg = long( f[0].split(":")[1] )
 				end = long( f[-1].split(":")[1] )
 				
-				if end - beg < video_len: video_len = end - beg
-
+				ts_set = []
+				
 				# time series of this coder
 				ts  = []
-
 				for i in range(1,len(f)-1):
 					elapse = long(f[i].split(":")[1]) - beg
-					if elapse > video_len+1000:
-						print vid, "\t", coder["turkID"], "\tis outliner"
-						outliner = 1
-						break;
-					else:
-						ts.append( elapse )
+					ts.append( elapse )
 
-				#print coder["turkID"], "=>", ts
-				if outliner == 0:
-					ts_set.append(ts)
-				else:
-					outlinter = 0
-			
-			res = self.aggregate(ts_set, video_len)
-			self.write( json.dumps(res) )
-		
-		elif t == Type.DATABYCODER:
-			f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", turkId, vid)
-			f = f["feedback"].split(",")
+				ts_set.append(ts)
 
-			beg = long( f[0].split(":")[1] )
-			end = long( f[-1].split(":")[1] )
-			
-			ts_set = []
-			# time series of this coder
-			ts  = []
+				res = self.aggregate(ts_set, end-beg)
+				self.write( json.dumps(res) )
 
-			for i in range(1,len(f)-1):
-				elapse = long(f[i].split(":")[1]) - beg
-				ts.append( elapse )
+			elif t == Type.CODERPSI:
+				coders = self.db.query("SELECT distinct turkID FROM verify")
 
-			ts_set.append(ts)
+				for coder in coders:
+					res = self.db.get("SELECT psi FROM psi WHERE turkID = %s and vid = %s", coder["turkID"], vid)
+					res = res["psi"]
+					coder["psi"] = "%0.3f" % self.calculatePSI( res )
 
-			res = self.aggregate(ts_set, end-beg)
-			self.write( json.dumps(res) )
+				self.write( json.dumps( coders ) )
 
-		elif t == Type.CODERPSI:
-			coders = self.db.query("SELECT distinct turkID FROM verify")
-
-			for coder in coders:
-				res = self.db.get("SELECT psi FROM psi WHERE turkID = %s and vid = %s", coder["turkID"], vid)
-				res = res["psi"]
-				coder["psi"] = "%0.3f" % self.calculatePSI( res )
-
-			self.write( json.dumps( coders ) )
+		except Exception, exception:
+			print exception
 
 
 
