@@ -280,7 +280,7 @@ function onSelectCoder(coders) {
 		}
 
 		if( coder_buffer[selectedVideo] && coder_buffer[selectedVideo][value] )
-			createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height );
+			createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height/2 );
 		else {
 			$.post(
 				base_url,
@@ -292,7 +292,7 @@ function onSelectCoder(coders) {
 						coder_buffer[selectedVideo] = {};
 						coder_buffer[selectedVideo][value] = dat;
 					}
-					createHistogram( dat, value, w, canvas_height );
+					createHistogram( dat, value, w, canvas_height/2 );
 				},
 				"json"
 			);
