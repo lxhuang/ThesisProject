@@ -237,15 +237,18 @@ function onStateChangeHandler(newstate) {
 		case 1:     // playing
 			if( paused == 1 ) {
 				addEvent('c');
+				state = 1;
 				paused = 0;
 			}
 			break;
 		case 2:     // paused (should never happen)
 			addEvent('pp');
+			state = 3;
 			paused = 1;
 			break;
 		case 3:     // buffering
 			addEvent('pp');
+			state = 3;
 			paused = 1;
 			break;
 		case 5:     // cued
