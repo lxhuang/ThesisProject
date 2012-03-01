@@ -20,11 +20,23 @@
 				</div>
 			</div>
 			<div id="playercontainer">You need Flash player 10 and JavaScript enabled</div>
-			<div>
+			<div style="margin-bottom: 10px;">
 				<span style="font-family: arial"><a id="video_play" href="#">play</a></span>
 				<span style="margin-left: 5px; margin-right: 5px; color: #BBBBBB;">|</span>
 				<span style="font-family: arial"><a id="video_stop" href="#">stop</a></span>
 			</div>
+
+			<div>
+				<div id="messagebox" style="width:320px; height: 300px; border: 1px solid #CCCCCC; overflow: auto;"></div>
+				<div>
+					<textarea rows="2" cols="40"></textarea>
+					<input type="submit" value="send" id="send"/>
+					<input type="submit" value="save" id="save"/>
+					<span style="font-size: 12px; font-style: Georgia; margin-right: 3px;">Your name</span><input type="text" id="whom"/>
+					<span id="palette" style="width: 15px; height: 15px;" value="#000000"></span>
+				</div>
+			</div>
+
 		</div>
 		
 		<div id="paint" style="width: 600px; height: 6000px; float: left; margin-right: 10px; border: 1px solid #CCCCCC;"></div>

@@ -26,11 +26,142 @@ var video_table = null,
 var coder_buffer = {};
 var video_buffer = {};
 var coder_info_buffer = {};
+var outliner_buffer = {};
 
 var paper_set = [];
 var indicator = [];
 
 var video_ready = 0;
+
+var palette = {
+	sz : 15,
+	gap : 5,
+	palette_width : 0,
+	palette_height : 0,
+	palette_selected : null,
+	_colors: ["#000000", "#1B65DE", "#08C24F", "#B5BA2D", "#F59B0A", "#E81207"],
+
+	_draw: function(paper, clr, x0, y0, w, h) {
+		str = "M" + x0 + "," + y0 + "L" +
+				(x0+w) + "," + y0 + "L" +
+				(x0+w) + "," + (y0+h) + "L" +
+				x0 + "," + (y0+h) + "Z";
+
+		bg = paper.path( str );
+		bg.attr({fill: clr});
+
+		return bg;
+	},
+	init: function() {
+		
+		palette.palette_width = 3 * palette.sz + 4 * palette.gap;
+		palette.palette_height = 2 * palette.sz + 3 * palette.gap;
+
+		if( $("#palette") ) {
+			
+			w = $("#palette").width();
+			h = $("#palette").height();		
+			r = Raphael(document.getElementById("palette"), w, h);
+			palette.palette_selected = palette._draw(r, "#000000", 0, 0, w, h);
+
+		}
+		
+	},
+	display: function(x, y) {
+		if( $("#palette_container").length ) {
+			$("#palette_container").show();
+			return;
+		}
+				
+		container = $("<div>").attr("id", "palette_container")
+						.css({
+							"width" : palette.palette_width, 
+							"height": palette.palette_height,
+							"position": "absolute",
+							"top": y,
+							"left": x,
+							"z-index": 3
+						});
+		
+		$("body").append(container);
+
+		r = Raphael(document.getElementById("palette_container"), palette.palette_width, palette.palette_height);
+
+		r.rect(0, 0, palette.palette_width, palette.palette_height, 10).attr({fill: "#CCCCCC"});
+
+		index = 0;
+		for( i=1; i<=2; i++ ) { // row
+			for( j=1; j<=3; j++ ) { // col
+				palette._draw(r, palette._colors[index], j*palette.gap + (j-1)*palette.sz, i*palette.gap + (i-1)*palette.sz, palette.sz, palette.sz)
+					.data("clr", palette._colors[index])
+					.click(function() {
+						$("#palette").attr("value", this.data("clr"));
+						$("#palette_container").hide();
+						if( palette.palette_selected ) {
+							palette.palette_selected.attr({fill: this.data("clr")});
+						}
+					});
+				index++;
+			}
+		}
+	},
+	close: function() {
+		$("#palette_container").hide();
+	}
+};
+
+
+var updater = {
+	cursor: 0,
+	errorSleepTime: 500,
+
+	poll: function() {
+		$.post(
+			base_url + "update",
+			"cursor=" + updater.cursor,
+			function(dat) {
+				if(dat.res)
+					updater.onSuccess(dat.res);
+				else
+					updater.onError();
+			},
+			"json"
+		);
+	},
+
+	onSuccess: function(dat) {
+		if( dat.length ) {
+			updater.cursor = dat[dat.length-1].id;
+
+			for( i=0; i<dat.length; i++ ) {
+				updater.showMessage(dat[i]);
+			}
+		}
+
+		updater.errorSleepTime = 500;
+		setTimeout( "updater.poll()", updater.errorSleepTime );
+	},
+
+	onError: function() {
+		updater.errorSleepTime *= 2;
+		setTimeout( "updater.poll()", updater.errorSleepTime );
+	},
+
+	showMessage: function(dat) {
+		var uuid   = dat.id;
+		var tokens = dat.body.split("|");
+		var clr    = tokens[0].split(":")[1];
+				
+		var str = "";
+		for( j=1; j<tokens.length; j++ ) {
+			if( j>1 )
+				str = str + "|";
+			str = str + tokens[j];
+		}
+
+		addMessage(str, clr, uuid);
+	}
+};
 
 function showMask( $info ) {
 	$("#info").html($info);
@@ -43,7 +174,43 @@ function hideMask() {
 	$("object").attr("width", "320")
 }
 
-function createPaper(dat, paper_id, w, h) {
+function addMessage(msg, clr, uuid) {
+	$new_message = $("<div>").css({
+		"width": "300px", 
+		"color": clr,
+		"font-size": "13px",
+		"font-family": "Georgia"
+	}).html(msg);
+
+	if( uuid ) {
+		if( $("#"+uuid).length == 0 )
+			$new_message.attr("id", uuid);
+		else
+			return;
+	}
+
+	$("#messagebox").append( $new_message );
+}
+
+function newMessage( msg ) {
+	$("#send").attr("disabled", "disabled");
+
+	$.post(
+		base_url + "new",
+		"msg="+msg,
+		function(dat) {
+			if(dat.id) {
+				updater.cursor = dat.id;
+				updater.showMessage(dat);
+				$("#send").removeAttr("disabled");
+				$("#send").parent().find("textarea").val("");
+			}
+		},
+		"json"
+	);
+}
+
+function createHistogram(dat, paper_id, w, h) {
 	
 	var len = dat.length;
 
@@ -105,8 +272,13 @@ function onSelectCoder(coders) {
 	var w = $("#paint").width();
 
 	$.each( coders, function(index, value) {
+		if( outliner_buffer[selectedVideo+","+value] ) {
+			alert( value+" is outliner" );
+			return;
+		}
+
 		if( coder_buffer[selectedVideo] && coder_buffer[selectedVideo][value] )
-			createPaper( coder_buffer[selectedVideo][value], value, w, canvas_height );
+			createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height );
 		else {
 			$.post(
 				base_url,
@@ -118,7 +290,7 @@ function onSelectCoder(coders) {
 						coder_buffer[selectedVideo] = {};
 						coder_buffer[selectedVideo][value] = dat;
 					}
-					createPaper( dat, value, w, canvas_height );
+					createHistogram( dat, value, w, canvas_height );
 				},
 				"json"
 			);
@@ -144,7 +316,7 @@ function onSelectVideo(video) {
 	var w = $("#paint").width();
 
 	if( video_buffer[video] ) {
-		createPaper( video_buffer[video], "consensus view", w, canvas_height );
+		createHistogram( video_buffer[video], "consensus view", w, canvas_height );
 		return;
 	}
 
@@ -152,8 +324,16 @@ function onSelectVideo(video) {
 		base_url,
 		"type=" + TYPE_DATABYVIDEO + "&vid=" + video,
 		function(dat) {
-			video_buffer[video] = dat;
-			createPaper(dat, "consensus view", w, canvas_height);
+			if( dat.res ) {
+				video_buffer[video] = dat.res;
+				createHistogram(dat.res, "consensus view", w, canvas_height);	
+			}
+			if( dat.outliner ) {
+				$.each(dat.outliner, function(index, value) {
+					addMessage("[outliner] "+value, "red");
+					outliner_buffer[ value ] = 1; // vid->turkId
+				} );
+			}
 		},
 		"json"
 	);
@@ -390,17 +570,23 @@ google.setOnLoadCallback(function(){
 	requestVideoList();
 });
 
+function saveState( comment ) {
+	
+}
+
 $(document).ready(function(){
 	
-	$("#paint").click(function(evt){
+	$("#whom").val("NewGuest");
+
+	$("#paint").click(function(evt) {
 		var x0 = $("#paint").position().left;
 		var x1 = evt.pageX;
 		var w  = $("#paint").width();
 		seekTo( (x1-x0)/w );
-	});
+	} );
 
 
-	$("#video_play").click(function(){
+	$("#video_play").click(function() {
 		if( video_ready ) {
 			player.setVolume(100);
 			player.playVideo();
@@ -408,13 +594,13 @@ $(document).ready(function(){
 			alert("Wait until the video gets loaded");
 		}
 		return false;
-	});
+	} );
 
 
-	$("#video_stop").click(function(){
+	$("#video_stop").click(function() {
 		player.stopVideo();
 		return false;
-	});
+	} );
 
 	$("#attr").change(function() {
 		attr = $("#attr option:selected").val();
@@ -424,6 +610,40 @@ $(document).ready(function(){
 			updateCoderAttribute(attr);
 		}
 	} );
+
+	
+	palette.init();
+
+	$("#palette").click(function(evt) {
+		x = evt.pageX;
+		y = evt.pageY;
+		palette.display(x, y-palette.palette_height);
+	} );
+
+	$("#send").click(function() {
+		if( $("#send").parent().find("textarea").val() == "" ) {
+			alert("Cannot send empty message");
+			return;
+		}
+
+		body = "c:" + $("#palette").attr("value") + "|"
+					+ $("#whom").val() + " said " + $("#send").parent().find("textarea").val();
+		
+		newMessage(body);
+	} );
+
+	$("#save").click(function() {
+		comment = $("#send").parent().find("textarea").val();
+
+		if( comment == "" ) {
+			alert("Write some comments about your saving");
+			return;
+		}
+		
+		saveState(comment);
+	} );
+
+	updater.poll();
 
 });
 
