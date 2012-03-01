@@ -405,9 +405,9 @@ function onErrorHandler(code) {
 function seekTo(percent) {
 	if( video_ready ) {
 		dur = player.getDuration();
-		player.seekTo( dur*percent, true );
 		player.setVolume(100);
-		player.playVideo();	
+		player.playVideo();
+		player.seekTo( dur*percent, true );
 	} else {
 		alert("Wait until the video gets loaded");
 		return;	
