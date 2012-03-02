@@ -224,6 +224,9 @@ class MainHandler(tornado.web.RequestHandler):
 						elapse = long(f[index].split(":")[1]) - beg - space
 						ts.append(elapse)
 						index = index+1
+					else:
+						print turkId, vid, f[index], " =>weird format"
+						index = index+1
 
 				ts_set.append(ts)
 
