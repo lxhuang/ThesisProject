@@ -170,6 +170,9 @@ class MainHandler(tornado.web.RequestHandler):
 							else:
 								ts.append(elapse)
 								index = index+1
+						else:
+							print coder["turkID"], vid, f[index], " =>weird format"
+							index = index+1
 
 					#print coder["turkID"], "=>", ts
 					if outlier == 0:

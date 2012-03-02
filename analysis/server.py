@@ -16,7 +16,7 @@ define("port", default=8483, type=int)
 define("mysql_host", default="23.21.246.188:3306")
 define("mysql_database", default="mturk")
 define("mysql_user", default="root")
-define("mysql_password", default="")
+define("mysql_password", default="rhubarb")
 
 class Application(tornado.web.Application):
 	def __init__(self):
