@@ -1,5 +1,5 @@
 
-var base_url = "http://23.21.246.188:80/";
+var base_url = "http://localhost:8483/";
 var canvas_height = 200;
 
 var TYPE_CODERLIST   = 0,
@@ -26,7 +26,7 @@ var video_table = null,
 var coder_buffer = {};
 var video_buffer = {};
 var coder_info_buffer = {};
-var outliner_buffer = {};
+var outlier_buffer = {};
 var mark_buffer = {};
 
 var paper_set = [];
@@ -274,7 +274,7 @@ function onSelectCoder(coders) {
 	var w = $("#paint").width();
 
 	$.each( coders, function(index, value) {
-		if( outliner_buffer[selectedVideo+","+value] ) {
+		if( outlier_buffer[selectedVideo+","+value] ) {
 			alert( value+" is outlier" );
 			return;
 		}
@@ -330,10 +330,10 @@ function onSelectVideo(video) {
 				video_buffer[video] = dat.res;
 				createHistogram(dat.res, "consensus view", w, canvas_height);	
 			}
-			if( dat.outliner ) {
-				$.each(dat.outliner, function(index, value) {
+			if( dat.outlier ) {
+				$.each(dat.outlier, function(index, value) {
 					addMessage("[outlier] "+value, "red");
-					outliner_buffer[ value ] = 1; // vid->turkId
+					outlier_buffer[ value ] = 1; // vid->turkId
 				} );
 			}
 		},
@@ -452,7 +452,7 @@ function requestCoderList() {
 			}
 
 			coder_table = new google.visualization.Table(document.getElementById("codertable"));
-			coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "200px"});
+			coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
 
 			google.visualization.events.addListener(coder_table, 'select', function(){
 				onSelectCoder( getSelectedCoder() );
@@ -507,7 +507,7 @@ function requestVideoList() {
 			}
 
 			video_table = new google.visualization.Table(document.getElementById("videotable"));
-			video_table.draw(video_data, {showRowNumber: true, height: "300px", width: "200px"});
+			video_table.draw(video_data, {showRowNumber: true, height: "300px", width: "250px"});
 
 			google.visualization.events.addListener(video_table, 'select', function(){
 				onSelectVideo( getSelectedVideo() );
@@ -618,7 +618,7 @@ function updatePSIAttr(video) {
 			attrValue = coder_info_buffer[turkId]["psi"][video];
 			coder_data.setCell(i, 1, ""+attrValue);
 		}
-		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "200px"});
+		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
 	}
 }
 
@@ -658,7 +658,7 @@ function updateCoderAttribute(attr) {
 
 			coder_data.setCell(i, 1, ""+attrValue);
 		}
-		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "200px"});
+		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
 	}
 }
 

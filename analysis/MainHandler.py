@@ -42,8 +42,6 @@ class MainHandler(tornado.web.RequestHandler):
 				for i in range(beg,end+1):
 					res[i] = res[i] + 1
 
-		#print sum(res)
-
 		return res
 
 	def measure(self, personality, coder):
@@ -120,46 +118,68 @@ class MainHandler(tornado.web.RequestHandler):
 			elif t == Type.DATABYVIDEO:
 				coders = self.db.query("SELECT distinct turkID FROM verify")
 				
-				# time series data from all coders
 				ts_set = []
+				outlier = 0
+				
 				# messages sent back to the client
 				message = []
 
 				video_len = 99999999
-
-				outliner = 0
-
 				for coder in coders:
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder["turkID"], vid)
 					f = f["feedback"].split(",")
 					
-					beg = long( f[0].split(":")[1] )
-					end = long( f[-1].split(":")[1] )
+					beg_index = 0
+					while beg_index < len(f):
+						if f[beg_index].split(":")[0] == "s":
+							break;
+						beg_index = beg_index+1
+					
+					end_index = len(f)-1
+					while end_index >= 0:
+						if f[end_index].split(":")[0] == "p":
+							break;
+						end_index = end_index-1
+
+					beg = long( f[beg_index].split(":")[1] )
+					end = long( f[end_index].split(":")[1] )
 					
 					if end - beg < video_len: video_len = end - beg
 
 					# time series of this coder
 					ts  = []
-
-					for i in range(1,len(f)-1):
-						elapse = long(f[i].split(":")[1]) - beg
-						if elapse > video_len+1000:
-							print vid, "\t", coder["turkID"], "\tis outlier"
-							message.append( vid + "," + coder["turkID"] )
-							outliner = 1
-							break;
-						else:
-							ts.append( elapse )
+					
+					space = 0
+					index = beg_index + 1
+					while index < end_index:
+						if f[index].split(":")[0] == "pp":
+							if f[index+1].split(":")[0] == "c":
+								space = space + long(f[index+1].split(":")[1]) - long(f[index].split(":")[1])
+								index = index+2
+							else:
+								if index < end_index-1:
+									print coder["turkID"], "\t", vid, " [pp,c] does not match"
+								index = index+1
+						elif f[index].split(":")[0] == "b":
+							elapse = long(f[index].split(":")[1]) - beg - space
+							if elapse > video_len + 1000:
+								print vid, "\t", coder["turkID"], "\tis outlier"
+								message.append( vid + "," + coder["turkID"] )
+								outlier = 1
+								break;
+							else:
+								ts.append(elapse)
+								index = index+1
 
 					#print coder["turkID"], "=>", ts
-					if outliner == 0:
+					if outlier == 0:
 						ts_set.append(ts)
 					else:
-						outlinter = 0
+						outlier = 0
 				
 				res = self.aggregate(ts_set, video_len)
 
-				ret = {'outliner': message, 'res': res}
+				ret = {'outlier': message, 'res': res}
 
 				self.write( json.dumps(ret) )
 			
@@ -167,16 +187,40 @@ class MainHandler(tornado.web.RequestHandler):
 				f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", turkId, vid)
 				f = f["feedback"].split(",")
 
-				beg = long( f[0].split(":")[1] )
-				end = long( f[-1].split(":")[1] )
+				beg_index = 0
+				while beg_index < len(f):
+					if f[beg_index].split(":")[0] == "s":
+						break;
+					beg_index = beg_index+1
+					
+				end_index = len(f)-1
+				while end_index >= 0:
+					if f[end_index].split(":")[0] == "p":
+						break;
+					end_index = end_index-1
+				
+
+				beg = long( f[beg_index].split(":")[1] )
+				end = long( f[end_index].split(":")[1] )
 				
 				ts_set = []
-
-				# time series of this coder
 				ts  = []
-				for i in range(1,len(f)-1):
-					elapse = long(f[i].split(":")[1]) - beg
-					ts.append( elapse )
+				
+				space = 0
+				index = beg_index + 1
+				while index < end_index:
+					if f[index].split(":")[0] == "pp":
+						if f[index+1].split(":")[0] == "c":
+							space = space + long(f[index+1].split(":")[1]) - long(f[index].split(":")[1])
+							index = index+2
+						else:
+							if index < end_index-1:
+								print turkId, "\t", vid, " [pp,c] does not match"
+							index = index+1
+					elif f[index].split(":")[0] == "b":
+						elapse = long(f[index].split(":")[1]) - beg - space
+						ts.append(elapse)
+						index = index+1
 
 				ts_set.append(ts)
 
