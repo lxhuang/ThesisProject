@@ -270,6 +270,8 @@ class MainHandler(tornado.web.RequestHandler):
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder, vid)
 					f = f["feedback"].split(",")
 					
+					print "cluster analysis=>", coder
+
 					beg_index = 0
 					while beg_index < len(f):
 						if f[beg_index].split(":")[0] == "s":

@@ -295,8 +295,14 @@ function onSelectCoder(coders) {
 	if( $("#combined").is(":checked") ) {
 		coder_str = "";
 		for( i=0; i<coders.length; i++ ) {
-			if( i>=1 )
+			
+			if( outlier_buffer[selectedVideo+","+coders[i]] ) {
+				continue;
+			}
+
+			if( coder_str != "" )
 				coder_str = coder_str + "|";
+			
 			coder_str = coder_str + coders[i];
 		}
 		if( coder_str == "" ) return;
