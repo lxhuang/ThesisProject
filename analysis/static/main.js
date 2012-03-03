@@ -213,7 +213,7 @@ function newMessage( msg ) {
 	);
 }
 
-function createHistogram(dat, paper_id, w, h) {
+function createHistogram(dat, paper_id, w, h, defmax) {
 	
 	// create a new div
 	$child_canvas = $("<div>").attr("id", paper_id)
@@ -230,14 +230,33 @@ function createHistogram(dat, paper_id, w, h) {
 	// print the paper ID
 	paper.text(50, 10, paper_id);
 
+	// create grids
+	var numOfLines = 4;
+	space = h/(numOfLines+1);
+	for( i=1; i<=numOfLines; i++ ) {
+		paper.path( "M0,"+(i*space)+"L"+w+","+(i*space) ).attr({"stroke-dasharray":"--", "stroke":"#CCCCCC"});
+	}
+
 	var len = dat.length;
 	if( len == 0 ) return;
 
 	// find the peak
+	/*
 	var max = dat[0];
 	for( i=1; i<len; i++ ) {
 		if( dat[i]>max )
 			max=dat[i];
+	}
+	*/
+	var max=0;
+	if( defmax )
+		max=defmax;
+	else {
+		for(key in coder_info_buffer) {
+			if( coder_info_buffer.hasOwnProperty(key) ) {
+				max++;
+			}
+		}	
 	}
 
 	// background
@@ -249,6 +268,7 @@ function createHistogram(dat, paper_id, w, h) {
 	str = "M0," + (h-y);
 	for( i=1; i<w; i++ ) {
 		y = dat[Math.round(i * len / w)];
+		y = (y>max) ? max : y;
 		y = y / max * h;
 		str = str + "L" + i + "," + (h-y);
 	}
@@ -306,7 +326,7 @@ function onSelectCoder(coders) {
 			}
 
 			if( coder_buffer[selectedVideo] && coder_buffer[selectedVideo][value] )
-				createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height/2 );
+				createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height/2, 1 );
 			else {
 				$.post(
 					base_url,
@@ -318,7 +338,7 @@ function onSelectCoder(coders) {
 							coder_buffer[selectedVideo] = {};
 							coder_buffer[selectedVideo][value] = dat;
 						}
-						createHistogram( dat, value, w, canvas_height/2 );
+						createHistogram( dat, value, w, canvas_height/2, 1 );
 					},
 					"json"
 				);
@@ -854,10 +874,10 @@ $(document).ready(function(){
 	$("#newpaper").click( function() {
 		if( paper_set.length == 0 ) {
 			alert( "Please select video first" );
-			return false;
+		} else {
+			var w = $("#paint").width();
+			createHistogram( [], "combined "+paper_set.length, w, canvas_height );
 		}
-		var w = $("#paint").width();
-		createHistogram( [], "combined "+paper_set.length, w, canvas_height );
 		return false;
 	} );
 
@@ -866,6 +886,7 @@ $(document).ready(function(){
 			$("#paint div:gt(0)").remove();
 			paper_set.splice(1, paper_set.length-1);	
 		}
+		return false;
 	} );
 
 	$("#openNote").click( function() {$("#notes").show();} );
