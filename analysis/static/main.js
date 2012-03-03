@@ -6,7 +6,8 @@ var TYPE_CODERLIST   = 0,
 	TYPE_VIDEOLIST   = 1,
 	TYPE_DATABYVIDEO = 2,
 	TYPE_DATABYCODER = 3,
-	TYPE_CODERPSI    = 4;
+	TYPE_CODERPSI    = 4,
+	TYPE_DATABYCODERS= 5;
 
 var EXTROVERSION      = "1",
 	AGREEABLENESS     = "2",
@@ -214,15 +215,6 @@ function newMessage( msg ) {
 
 function createHistogram(dat, paper_id, w, h) {
 	
-	var len = dat.length;
-
-	// find the peak
-	var max = dat[0];
-	for( i=1; i<len; i++ ) {
-		if( dat[i]>max )
-			max=dat[i];
-	}
-
 	// create a new div
 	$child_canvas = $("<div>").attr("id", paper_id)
 						.css("width",  w)
@@ -234,6 +226,19 @@ function createHistogram(dat, paper_id, w, h) {
 	// create a raphael paper
 	var paper = Raphael(document.getElementById(paper_id), w, h);
 	paper_set.push(paper)
+
+	// print the paper ID
+	paper.text(50, 10, paper_id);
+
+	var len = dat.length;
+	if( len == 0 ) return;
+
+	// find the peak
+	var max = dat[0];
+	for( i=1; i<len; i++ ) {
+		if( dat[i]>max )
+			max=dat[i];
+	}
 
 	// background
 	bg = paper.path("M0,0").attr({stroke: "none", opacity: .3});
@@ -255,9 +260,6 @@ function createHistogram(dat, paper_id, w, h) {
 		path: str + "L" + w + "," + h + "L0," + h + "Z",
 		fill: "#11ED3D"
 	} );
-
-	// print the paper ID
-	paper.text(50, 10, paper_id);
 }
 
 function onSelectCoder(coders) {
@@ -268,36 +270,61 @@ function onSelectCoder(coders) {
 		return;
 	}
 
-	$("#paint div:gt(0)").remove();
-	paper_set.splice(1, paper_set.length-1);
-
 	var w = $("#paint").width();
 
-	$.each( coders, function(index, value) {
-		if( outlier_buffer[selectedVideo+","+value] ) {
-			alert( value+" is outlier" );
-			return;
+	if( $("#combined").is(":checked") ) {
+		coder_str = "";
+		for( i=0; i<coders.length; i++ ) {
+			if( i>=1 )
+				coder_str = coder_str + "|";
+			coder_str = coder_str + coders[i];
 		}
+		if( coder_str == "" ) return;
 
-		if( coder_buffer[selectedVideo] && coder_buffer[selectedVideo][value] )
-			createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height/2 );
-		else {
-			$.post(
-				base_url,
-				"type=" + TYPE_DATABYCODER + "&vid=" + selectedVideo + "&turkId=" + value,
-				function(dat) {
-					if( coder_buffer[selectedVideo] )
-						coder_buffer[selectedVideo][value] = dat;
-					else {
-						coder_buffer[selectedVideo] = {};
-						coder_buffer[selectedVideo][value] = dat;
+		$.post(
+			base_url,
+			"type=" + TYPE_DATABYCODERS + "&vid=" + selectedVideo + "&turkIds=" + coder_str,
+			function( dat ) {
+				if( dat.res ) {
+					if( paper_set.length > 1 ) {
+						$("#paint div:last").remove();
+						paper_set.splice( paper_set.length-1, 1 );
 					}
-					createHistogram( dat, value, w, canvas_height/2 );
-				},
-				"json"
-			);
-		}
-	} );
+					createHistogram( dat.res, "combined "+paper_set.length, w, canvas_height );
+				}
+			},
+			"json"
+		);
+	} else {
+		$("#paint div:gt(0)").remove();
+		paper_set.splice(1, paper_set.length-1);
+
+		$.each( coders, function(index, value) {
+			if( outlier_buffer[selectedVideo+","+value] ) {
+				alert( value+" is outlier" );
+				return;
+			}
+
+			if( coder_buffer[selectedVideo] && coder_buffer[selectedVideo][value] )
+				createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height/2 );
+			else {
+				$.post(
+					base_url,
+					"type=" + TYPE_DATABYCODER + "&vid=" + selectedVideo + "&turkId=" + value,
+					function(dat) {
+						if( coder_buffer[selectedVideo] )
+							coder_buffer[selectedVideo][value] = dat;
+						else {
+							coder_buffer[selectedVideo] = {};
+							coder_buffer[selectedVideo][value] = dat;
+						}
+						createHistogram( dat, value, w, canvas_height/2 );
+					},
+					"json"
+				);
+			}
+		} );
+	}
 }
 
 function onSelectVideo(video) {
@@ -787,7 +814,6 @@ $(document).ready(function(){
 
 	
 	palette.init();
-
 	$("#palette").click(function(evt) {
 		x = evt.pageX;
 		y = evt.pageY;
@@ -815,6 +841,31 @@ $(document).ready(function(){
 		}
 		
 		saveState(comment);
+	} );
+
+	$("#combined").change( function() {
+		if( $("#combined").is(":checked") ) {
+			$("#newpaper").removeAttr("disabled");
+		} else {
+			$("#newpaper").attr("disabled", "disabled");
+		}
+	} );
+
+	$("#newpaper").click( function() {
+		if( paper_set.length == 0 ) {
+			alert( "Please select video first" );
+			return false;
+		}
+		var w = $("#paint").width();
+		createHistogram( [], "combined "+paper_set.length, w, canvas_height );
+		return false;
+	} );
+
+	$("#clearpaper").click( function() {
+		if( paper_set.length > 1 ) {
+			$("#paint div:gt(0)").remove();
+			paper_set.splice(1, paper_set.length-1);	
+		}
 	} );
 
 	$("#openNote").click( function() {$("#notes").show();} );
