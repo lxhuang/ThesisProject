@@ -24,16 +24,18 @@ var video_table = null,
 	video_data  = null, 
 	coder_data  = null;
 
-var coder_buffer = {};
-var video_buffer = {};
-var coder_info_buffer = {};
-var outlier_buffer = {};
-var mark_buffer = {};
+var coder_buffer = {},
+	video_buffer = {},
+	coder_info_buffer = {},
+	outlier_buffer = {},
+	mark_buffer = {};
 
 var paper_set = [];
 var indicator = [];
 
 var video_ready = 0;
+var us_number = 0, 
+	in_number = 0;
 
 var palette = {
 	sz : 15,
@@ -295,11 +297,9 @@ function onSelectCoder(coders) {
 	if( $("#combined").is(":checked") ) {
 		coder_str = "";
 		for( i=0; i<coders.length; i++ ) {
-			
 			if( outlier_buffer[selectedVideo+","+coders[i]] ) {
 				continue;
 			}
-
 			if( coder_str != "" )
 				coder_str = coder_str + "|";
 			
@@ -316,7 +316,11 @@ function onSelectCoder(coders) {
 						$("#paint div:last").remove();
 						paper_set.splice( paper_set.length-1, 1 );
 					}
-					createHistogram( dat.res, "combined "+paper_set.length, w, canvas_height );
+
+					defmax = us_number;
+					if( $("#loc option:selected").val() == "in" )
+						defmax = in_number;
+					createHistogram( dat.res, "combined "+paper_set.length, w, canvas_height, defmax );
 				}
 			},
 			"json"
@@ -477,18 +481,13 @@ function requestCoderList() {
 		base_url,
 		"type="+TYPE_CODERLIST,
 		function(coderSet) {
-			coder_data = new google.visualization.DataTable();
-			
-			coder_data.addColumn( "string", "TurkID" );
-			coder_data.addColumn( "string", "Attr" );
-			
-			coder_data.addRows( coderSet.length );
 			for( i=0; i<coderSet.length; i++ ) {
 				var turkId = coderSet[i]["turkID"];
 				
 				coder_info_buffer[turkId] = {};
 				coder_info_buffer[turkId]["gender"]	= coderSet[i]["gender"];
 				coder_info_buffer[turkId]["age"] = coderSet[i]["age"];
+				coder_info_buffer[turkId]["loc"] = coderSet[i]["loc"];
 				coder_info_buffer[turkId]["1"] = coderSet[i]["1"];
 				coder_info_buffer[turkId]["2"] = coderSet[i]["2"];
 				coder_info_buffer[turkId]["3"] = coderSet[i]["3"];
@@ -500,13 +499,28 @@ function requestCoderList() {
 				coder_info_buffer[turkId]["9"] = coderSet[i]["9"];
 				coder_info_buffer[turkId]["psi"] = {};
 
-				coder_data.setCell(i, 0, turkId);
-				coder_data.setCell(i, 1, coderSet[i]["gender"]);
+				if( coderSet[i]["loc"] == "us" )
+					us_number++;
+				else if( coderSet[i]["loc"] == "in" )
+					in_number++;
+			}
+
+			// default choice is to display us coders
+			coder_data = new google.visualization.DataTable();
+			coder_data.addColumn( "string", "TurkID" );
+			coder_data.addColumn( "string", "Attr" );
+			coder_data.addRows( us_number );
+			var j=0;
+			for( i=0; i<coderSet.length; i++ ) {
+				if( coderSet[i]["loc"] == "us" ) {
+					coder_data.setCell(j, 0, coderSet[i]["turkID"]);
+					coder_data.setCell(j, 1, coderSet[i]["gender"]);
+					j++;
+				}
 			}
 
 			coder_table = new google.visualization.Table(document.getElementById("codertable"));
 			coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
-
 			google.visualization.events.addListener(coder_table, 'select', function(){
 				onSelectCoder( getSelectedCoder() );
 			});
@@ -715,6 +729,33 @@ function updateCoderAttribute(attr) {
 	}
 }
 
+function updateCoderTable(loc) {
+	if( coder_data ) {
+		rowNum = coder_data.getNumberOfRows();
+		coder_data.removeRows(0, rowNum);
+		
+		if( loc == "us" ) {
+			rowNum = us_number;
+		} else if( loc == "in" ) {
+			rowNum = in_number;
+		} else {
+			alert("wrong location");
+			return;
+		}
+
+		i = 0;
+		coder_data.addRows(rowNum);
+		for( key in coder_info_buffer ) {
+			if( coder_info_buffer.hasOwnProperty(key) && coder_info_buffer[key]["loc"] == loc ) {
+				coder_data.setCell(i, 0, key);
+				coder_data.setCell(i, 1, coder_info_buffer[key]["gender"]);
+				i++;
+			}
+		}
+		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
+	}
+}
+
 google.load('visualization', '1', {packages:['table']});
 google.setOnLoadCallback(function(){
 	requestCoderList();
@@ -836,6 +877,11 @@ $(document).ready(function(){
 		} else {
 			updateCoderAttribute(attr);
 		}
+	} );
+
+	$("#loc").change(function() {
+		loc = $("#loc option:selected").val();
+		updateCoderTable(loc);
 	} );
 
 	

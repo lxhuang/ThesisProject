@@ -107,6 +107,7 @@ class MainHandler(tornado.web.RequestHandler):
 					p = self.db.get("SELECT * FROM personality WHERE turkID = %s", coder["turkID"])
 					coder["gender"] = p["sex"][0]
 					coder["age"] = p["age"]
+					coder["loc"] = p["location"]
 					self.measure(p["personality"], coder)
 
 				self.write( json.dumps( coders ) )
