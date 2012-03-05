@@ -738,6 +738,8 @@ function updateCoderTable(loc) {
 			rowNum = us_number;
 		} else if( loc == "in" ) {
 			rowNum = in_number;
+		} else if( loc == "all" ){
+			rowNum = in_number+us_number;
 		} else {
 			alert("wrong location");
 			return;
@@ -746,7 +748,7 @@ function updateCoderTable(loc) {
 		i = 0;
 		coder_data.addRows(rowNum);
 		for( key in coder_info_buffer ) {
-			if( coder_info_buffer.hasOwnProperty(key) && coder_info_buffer[key]["loc"] == loc ) {
+			if( coder_info_buffer.hasOwnProperty(key) && (coder_info_buffer[key]["loc"] == loc || loc == "all") ) {
 				coder_data.setCell(i, 0, key);
 				coder_data.setCell(i, 1, coder_info_buffer[key]["gender"]);
 				i++;
