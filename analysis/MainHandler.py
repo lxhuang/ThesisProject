@@ -126,14 +126,22 @@ class MainHandler(tornado.web.RequestHandler):
 				coders = self.db.query("SELECT distinct turkID FROM verify")
 				
 				ts_set = []
-				outlier = 0
+				outlier= 0
 				
 				# messages sent back to the client
 				message = []
 
 				video_len = 99999999
 				for coder in coders:
+					# time series of this coder
+					ts  = []
+
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder["turkID"], vid)
+					if not f:
+						print "[", coder["turkID"], vid, "] does not exist!"
+						ts_set.append(ts)
+						continue
+
 					f = f["feedback"].split(",")
 
 					print coder["turkID"], vid
@@ -141,13 +149,13 @@ class MainHandler(tornado.web.RequestHandler):
 					beg_index = 0
 					while beg_index < len(f):
 						if f[beg_index].split(":")[0] == "s":
-							break;
+							break
 						beg_index = beg_index+1
 					
 					end_index = len(f)-1
 					while end_index >= 0:
 						if f[end_index].split(":")[0] == "p":
-							break;
+							break
 						end_index = end_index-1
 
 					beg = long( f[beg_index].split(":")[1] )
@@ -155,9 +163,6 @@ class MainHandler(tornado.web.RequestHandler):
 					
 					if end - beg < video_len: video_len = end - beg
 
-					# time series of this coder
-					ts  = []
-					
 					space = 0
 					index = beg_index + 1
 					while index < end_index:
@@ -175,7 +180,7 @@ class MainHandler(tornado.web.RequestHandler):
 								print vid, "\t", coder["turkID"], "\tis outlier"
 								message.append( vid + "," + coder["turkID"] )
 								outlier = 1
-								break;
+								break
 							else:
 								ts.append(elapse)
 								index = index+1
@@ -183,43 +188,42 @@ class MainHandler(tornado.web.RequestHandler):
 							print coder["turkID"], vid, f[index], " =>weird format"
 							index = index+1
 
-					#print coder["turkID"], "=>", ts
 					if outlier == 0:
 						ts_set.append(ts)
 					else:
 						outlier = 0
 				
 				res = self.aggregate(ts_set, video_len)
-
 				ret = {'outlier': message, 'res': res}
-
 				self.write( json.dumps(ret) )
 			except Exception, exception:
 				print "Type.DATABYVIDEO=>", exception
 			
 		elif t == Type.DATABYCODER:
 			try:
-				f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", turkId, vid)
-				f = f["feedback"].split(",")
+				ts_set = []
+				ts  = []
 
+				f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", turkId, vid)
+				if not f:
+					self.write( json.dumps(ts) )
+					return
+
+				f = f["feedback"].split(",")
 				beg_index = 0
 				while beg_index < len(f):
 					if f[beg_index].split(":")[0] == "s":
-						break;
+						break
 					beg_index = beg_index+1
 					
 				end_index = len(f)-1
 				while end_index >= 0:
 					if f[end_index].split(":")[0] == "p":
-						break;
+						break
 					end_index = end_index-1
 				
-
 				beg = long( f[beg_index].split(":")[1] )
 				end = long( f[end_index].split(":")[1] )
-				
-				ts_set = []
-				ts  = []
 				
 				space = 0
 				index = beg_index + 1
@@ -268,7 +272,15 @@ class MainHandler(tornado.web.RequestHandler):
 
 				coders = turkIds.split("|")
 				for coder in coders:
+					# time series of this coder
+					ts  = []
+
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder, vid)
+					if not f:
+						print "[", coder, vid, "] does not exist!"
+						ts_set.append(ts)
+						continue
+
 					f = f["feedback"].split(",")
 					
 					print "cluster analysis=>", coder
@@ -276,22 +288,19 @@ class MainHandler(tornado.web.RequestHandler):
 					beg_index = 0
 					while beg_index < len(f):
 						if f[beg_index].split(":")[0] == "s":
-							break;
+							break
 						beg_index = beg_index+1
 					
 					end_index = len(f)-1
 					while end_index >= 0:
 						if f[end_index].split(":")[0] == "p":
-							break;
+							break
 						end_index = end_index-1
 
 					beg = long( f[beg_index].split(":")[1] )
 					end = long( f[end_index].split(":")[1] )
 					
 					if end - beg < video_len: video_len = end - beg
-
-					# time series of this coder
-					ts  = []
 					
 					space = 0
 					index = beg_index + 1
@@ -309,7 +318,7 @@ class MainHandler(tornado.web.RequestHandler):
 							if elapse > video_len + 1000:
 								print vid, "\t", coder["turkID"], "\tis outlier"
 								outlier = 1
-								break;
+								break
 							else:
 								ts.append(elapse)
 								index = index+1
@@ -322,9 +331,13 @@ class MainHandler(tornado.web.RequestHandler):
 					else:
 						outlier = 0
 				
-				res = self.aggregate(ts_set, video_len)
-				ret = {'res': res}
-				self.write( json.dumps(ret) )
+				if video_len == 99999999:
+					ret = {'res': []}
+					self.write( json.dumps(ret) )
+				else:
+					res = self.aggregate(ts_set, video_len)
+					ret = {'res': res}
+					self.write( json.dumps(ret) )
 			except Exception, exception:
 				print "Type.DATABYCODERS=>", exception
 
