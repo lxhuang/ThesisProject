@@ -230,7 +230,7 @@ function createHistogram(dat, paper_id, w, h, defmax) {
 	paper_set.push(paper)
 
 	// print the paper ID
-	paper.text(50, 10, paper_id);
+	paper.text(400, 10, paper_id);
 
 	// create grids
 	var numOfLines = 4;
@@ -260,6 +260,7 @@ function createHistogram(dat, paper_id, w, h, defmax) {
 			}
 		}	
 	}
+	paper.text(40, 10, "("+max+")");
 
 	// background
 	bg = paper.path("M0,0").attr({stroke: "none", opacity: .3});
@@ -295,15 +296,16 @@ function onSelectCoder(coders) {
 	var w = $("#paint").width();
 
 	if( $("#combined").is(":checked") ) {
+		defmax = 0;
 		coder_str = "";
 		for( i=0; i<coders.length; i++ ) {
-			if( outlier_buffer[selectedVideo+","+coders[i]] ) {
+			if( outlier_buffer[selectedVideo+","+coders[i]] )
 				continue;
-			}
+
 			if( coder_str != "" )
 				coder_str = coder_str + "|";
-			
 			coder_str = coder_str + coders[i];
+			defmax++;
 		}
 		if( coder_str == "" ) return;
 
@@ -317,9 +319,6 @@ function onSelectCoder(coders) {
 						paper_set.splice( paper_set.length-1, 1 );
 					}
 
-					defmax = us_number;
-					if( $("#loc option:selected").val() == "in" )
-						defmax = in_number;
 					createHistogram( dat.res, "combined "+paper_set.length, w, canvas_height, defmax );
 				}
 			},
