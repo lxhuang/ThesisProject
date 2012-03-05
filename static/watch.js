@@ -52,7 +52,7 @@ function onSpace() {
 		started = 1;
 
 		hideMask();
-		showTip("Press space bar when you'd like to give feedback<br/>Don't move your mouse over the player area");
+		showTip("Press space bar when you'd like to give feedback<br/>Don't click on the player area");
 
 		playVideo();
 
@@ -298,7 +298,7 @@ function loadingProgress() {
 
 			state = 0;
 
-			showMask("Press space bar to start <br/> Don't move your mouse over the player area");
+			showMask("Press space bar to start <br/> Don't click on the player area");
 
 			return;
 		}

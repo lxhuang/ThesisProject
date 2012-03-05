@@ -10,6 +10,10 @@ $(document).ready(function(){
 		alert("We don't accept Microsoft IE browser (yes, it sucks). Please use a Firefox or Chrome or Safari instead.");
 		return;
 	}
+	if( $.browser.opera ) {
+		alert("We don't accept Opera. Please use a Firefox or Chrome or Safari instead");
+		return;
+	}
 	
 //	for( $i = 1; $i <= 90; $i++ ) $data[$i] = $i;
 
