@@ -25,16 +25,20 @@ class TaskHandler(tornado.web.RequestHandler):
 		# if not, assign new tasks to him; otherwise, return the top one
 		user = self.db.get( "SELECT * FROM task WHERE turkID = %s", turkId )
 		if not user:
-			rnd = video_string.split(',')
-			random.seed()
-			random.shuffle(rnd)
+			try:
+				rnd = video_string.split(',')
+				random.seed()
+				random.shuffle(rnd)
 
-			rnd_str = ','.join(rnd)
-			res = self.db.execute(
-				"INSERT INTO task (turkID, task) VALUES (%s, %s)", turkId, rnd_str
-			)
+				rnd_str = ','.join(rnd)
+				res = self.db.execute(
+					"INSERT INTO task (turkID, task) VALUES (%s, %s)", turkId, rnd_str
+				)
 
-			self.write("{\"v\":\"" + rnd[0] + "\"}")
+				self.write("{\"v\":\"" + rnd[0] + "\"}")
+			except Exception, exception:
+				print exception
+				
 		else:
 			if not action: #request
 				try:
