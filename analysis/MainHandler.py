@@ -256,6 +256,7 @@ class MainHandler(tornado.web.RequestHandler):
 				coders = self.db.query("SELECT distinct turkID FROM verify")
 
 				for coder in coders:
+					print "[CODERPSI]=>", coder["turkID"], vid
 					res = self.db.get("SELECT psi FROM psi WHERE turkID = %s and vid = %s", coder["turkID"], vid)
 					res = res["psi"]
 					coder["psi"] = "%0.3f" % self.calculatePSI( res )

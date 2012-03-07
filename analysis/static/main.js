@@ -573,7 +573,7 @@ function requestVideoList() {
 			}
 
 			video_table = new google.visualization.Table(document.getElementById("videotable"));
-			video_table.draw(video_data, {showRowNumber: true, height: "300px", width: "250px"});
+			video_table.draw(video_data, {showRowNumber: true, height: "200px", width: "250px"});
 
 			google.visualization.events.addListener(video_table, 'select', function(){
 				onSelectVideo( getSelectedVideo() );
@@ -676,6 +676,37 @@ function requestMarks() {
 	);
 }
 
+function createCoderDist(attr) {
+	if( attr != "gender" && attr != "age" ) {
+		hist = [0, 0, 0, 0, 0];
+		rowNum = coder_data.getNumberOfRows();
+		for( i=0; i<rowNum; i++ ) {
+			v = parseInt(coder_data.getValue(i, 1));
+			hist[v]++;
+		}
+		
+		// remove
+		$("#coderdist").html("");
+
+		// create a new div
+		$child_canvas = $("<div>").attr("id", "coderhistpad")
+						.css("width",  250)
+						.css("height", 50)
+						.css("border-bottom", "1px solid #CCCCCC");
+		$("#coderdist").append($child_canvas);
+
+		// create a raphael paper
+		var p = Raphael(document.getElementById("coderhistpad"), 250, 50);
+
+		for( i=0; i<5; i++ ) {
+			xx = i*50;
+			yy = hist[i]/rowNum*50;
+			p.rect( xx, (50-yy), 50, yy ).attr({"stroke":"#B1C9ED", "fill":"#B1C9ED", "fill-opacity":0.5});
+			p.text( i*50+25, 10, ""+hist[i] ).attr({"font-family":"Menlo, Consolas"});
+		}
+	}
+}
+
 function updatePSIAttr(video) {
 	if( coder_data ) {
 		rowNum = coder_data.getNumberOfRows();
@@ -685,6 +716,7 @@ function updatePSIAttr(video) {
 			coder_data.setCell(i, 1, ""+attrValue);
 		}
 		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
+		createCoderDist("psi")
 	}
 }
 
@@ -725,6 +757,7 @@ function updateCoderAttribute(attr) {
 			coder_data.setCell(i, 1, ""+attrValue);
 		}
 		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
+		createCoderDist( attr );
 	}
 }
 
