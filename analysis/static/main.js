@@ -183,7 +183,7 @@ function addMessage(msg, clr, uuid) {
 		"width": "300px", 
 		"color": clr,
 		"font-size": "13px",
-		"font-family": "Georgia"
+		"font-family": "Menlo, Consolas"
 	}).html(msg);
 
 	if( uuid ) {

@@ -1,0 +1,28 @@
+<html>
+
+	<head>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+		<script type="text/javascript">
+			base_url = "http://localhost:8483/"
+			$("#retrieve").click(function() {
+				$.post(
+					base_url+"analysis",
+					"type=retrieve",
+					function(dat) {
+						$("#retrieve").attr("disabled", "disabled");
+					},
+					"json"
+				);
+			} );
+		</script>
+	</head>
+
+	<body>
+
+		<input type="button" value="Retrieve Data" id="retrieve"/><br/>
+
+
+
+	</body>
+
+</html>

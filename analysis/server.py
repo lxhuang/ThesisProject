@@ -11,6 +11,7 @@ from MainHandler import MainHandler
 from UpdateHandler import UpdateHandler
 from UpdateHandler import NewMessageHandler
 from MarkHandler import MarkHandler
+from AnalysisHandler import AnalysisHandler
 
 define("port", default=8483, type=int)
 define("mysql_host", default="23.21.246.188:3306")
@@ -25,6 +26,7 @@ class Application(tornado.web.Application):
 			(r"/new", NewMessageHandler),
 			(r"/update", UpdateHandler),
 			(r"/mark", MarkHandler),
+			(r"/analysis", AnalysisHandler),
 		]
 
 		settings = dict(
