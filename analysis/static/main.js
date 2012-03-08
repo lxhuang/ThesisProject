@@ -678,7 +678,7 @@ function requestMarks() {
 
 function createCoderDist(attr) {
 	if( attr != "gender" && attr != "age" ) {
-		hist = [0, 0, 0, 0, 0];
+		hist = [0, 0, 0, 0, 0, 0];
 		rowNum = coder_data.getNumberOfRows();
 		for( i=0; i<rowNum; i++ ) {
 			v = parseInt(coder_data.getValue(i, 1));
@@ -698,11 +698,11 @@ function createCoderDist(attr) {
 		// create a raphael paper
 		var p = Raphael(document.getElementById("coderhistpad"), 250, 50);
 
-		for( i=0; i<5; i++ ) {
-			xx = i*50;
+		for( i=0; i<=5; i++ ) {
+			xx = 5+i*40;
 			yy = hist[i]/rowNum*50;
-			p.rect( xx, (50-yy), 50, yy ).attr({"stroke":"#B1C9ED", "fill":"#B1C9ED", "fill-opacity":0.5});
-			p.text( i*50+25, 10, ""+hist[i] ).attr({"font-family":"Menlo, Consolas"});
+			p.rect( xx, (50-yy), 40, yy ).attr({"stroke":"#B1C9ED", "fill":"#B1C9ED", "fill-opacity":0.5});
+			p.text( xx+20, 10, ""+hist[i] ).attr({"font-family":"Menlo, Consolas"});
 		}
 	}
 }
