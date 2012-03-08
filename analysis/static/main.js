@@ -677,6 +677,9 @@ function requestMarks() {
 }
 
 function createCoderDist(attr) {
+	
+	$("#coderdist").html("");
+	
 	if( attr != "gender" && attr != "age" ) {
 		hist = [0, 0, 0, 0, 0, 0];
 		rowNum = coder_data.getNumberOfRows();
@@ -684,9 +687,6 @@ function createCoderDist(attr) {
 			v = parseInt(coder_data.getValue(i, 1));
 			hist[v]++;
 		}
-		
-		// remove
-		$("#coderdist").html("");
 
 		// create a new div
 		$child_canvas = $("<div>").attr("id", "coderhistpad")
