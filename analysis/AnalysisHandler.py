@@ -147,7 +147,6 @@ class AnalysisHandler(tornado.web.RequestHandler):
 		if type == "retrieve":
 			self.retrieveData()
 			self.write("{\"success\": \"1\"}")
-
 		
 
 	def get(self):

@@ -24,13 +24,14 @@ var video_table = null,
 	video_data  = null, 
 	coder_data  = null;
 
-var coder_buffer = {},
+var coder_info_buffer = {},
+	coder_buffer = {},
 	video_buffer = {},
-	coder_info_buffer = {},
 	outlier_buffer = {},
 	mark_buffer = {};
 
 var paper_set = [];
+var paper_content = [];
 var indicator = [];
 
 var video_ready = 0;
@@ -170,12 +171,12 @@ var updater = {
 function showMask( $info ) {
 	$("#info").html($info);
 	$("#mask").css("z-index", 2);
-	$("object").attr("width", "0")
+	$("object").attr("width", "0");
 }
 
 function hideMask() {
 	$("#mask").css("z-index", -1);
-	$("object").attr("width", "320")
+	$("object").attr("width", "320");
 }
 
 function addMessage(msg, clr, uuid) {
@@ -215,7 +216,7 @@ function newMessage( msg ) {
 	);
 }
 
-function createHistogram(dat, paper_id, w, h, defmax) {
+function createHistogram(dat, paper_id, w, h, content, defmax) {
 	
 	// create a new div
 	$child_canvas = $("<div>").attr("id", paper_id)
@@ -228,6 +229,10 @@ function createHistogram(dat, paper_id, w, h, defmax) {
 	// create a raphael paper
 	var paper = Raphael(document.getElementById(paper_id), w, h);
 	paper_set.push(paper)
+
+	// add to paper content
+	if( content )
+		paper_content.push(content);
 
 	// print the paper ID
 	paper.text(400, 10, paper_id);
@@ -242,14 +247,6 @@ function createHistogram(dat, paper_id, w, h, defmax) {
 	var len = dat.length;
 	if( len == 0 ) return;
 
-	// find the peak
-	/*
-	var max = dat[0];
-	for( i=1; i<len; i++ ) {
-		if( dat[i]>max )
-			max=dat[i];
-	}
-	*/
 	var max=0;
 	if( defmax )
 		max=defmax;
@@ -285,7 +282,7 @@ function createHistogram(dat, paper_id, w, h, defmax) {
 	} );
 }
 
-function onSelectCoder(coders) {
+function onSelectCoder(coders, func, param) {
 	selectedVideo = getSelectedVideo();
 	
 	if( selectedVideo == null ) {
@@ -317,9 +314,12 @@ function onSelectCoder(coders) {
 					if( paper_set.length > 1 ) {
 						$("#paint div:last").remove();
 						paper_set.splice( paper_set.length-1, 1 );
+						paper_content.splice( paper_content.length-1, 1 );
 					}
 
-					createHistogram( dat.res, "combined "+paper_set.length, w, canvas_height, defmax );
+					createHistogram( dat.res, "combined "+paper_set.length, w, canvas_height, coder_str, defmax );
+					if( func )
+						func(param);
 				}
 			},
 			"json"
@@ -327,6 +327,7 @@ function onSelectCoder(coders) {
 	} else {
 		$("#paint div:gt(0)").remove();
 		paper_set.splice(1, paper_set.length-1);
+		paper_content.splice(0, paper_content.length);
 
 		$.each( coders, function(index, value) {
 			if( outlier_buffer[selectedVideo+","+value] ) {
@@ -335,7 +336,7 @@ function onSelectCoder(coders) {
 			}
 
 			if( coder_buffer[selectedVideo] && coder_buffer[selectedVideo][value] )
-				createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height/2, 1 );
+				createHistogram( coder_buffer[selectedVideo][value], value, w, canvas_height/2, value, 1 );
 			else {
 				$.post(
 					base_url,
@@ -347,7 +348,7 @@ function onSelectCoder(coders) {
 							coder_buffer[selectedVideo] = {};
 							coder_buffer[selectedVideo][value] = dat;
 						}
-						createHistogram( dat, value, w, canvas_height/2, 1 );
+						createHistogram( dat, value, w, canvas_height/2, value, 1 );
 					},
 					"json"
 				);
@@ -356,7 +357,7 @@ function onSelectCoder(coders) {
 	}
 }
 
-function onSelectVideo(video) {
+function onSelectVideo(video, func, param) {
 	if( player ) {
 		player.loadVideoById(video);
 		player.mute();
@@ -370,11 +371,14 @@ function onSelectVideo(video) {
 	// clear the painting area
 	$("#paint").html("");
 	paper_set.splice(0, paper_set.length);
+	paper_content.splice(0, paper_content.length);
 
 	var w = $("#paint").width();
 
 	if( video_buffer[video] ) {
 		createHistogram( video_buffer[video], "consensus view", w, canvas_height );
+		if( func )
+			func(param);
 		return;
 	}
 
@@ -391,6 +395,9 @@ function onSelectVideo(video) {
 					addMessage("[outlier] "+value, "red");
 					outlier_buffer[ value ] = 1; // vid->turkId
 				} );
+			}
+			if( func ) {
+				func(param);
 			}
 		},
 		"json"
@@ -595,7 +602,7 @@ function addMark(mid, comment) {
 			if( mark_buffer[_mid] ) {
 				restoreState( 
 					mark_buffer[_mid]["video"], 
-					mark_buffer[_mid]["coder"].split("|"), 
+					mark_buffer[_mid]["coder"], 
 					mark_buffer[_mid]["time"]
 				);
 			}
@@ -807,37 +814,52 @@ function restoreStateVideoTime(time) {
 		setTimeout( "restoreStateVideoTime(" + time + ")", 100 );
 	}
 }
-function restoreState( video, coder, time ) {
+
+
+var _g_coders_array = null;
+function restoreStateCoder( coder_array ) {
+	if( coder_array.length == 0 ) {
+		return;
+	}
 	
-	onSelectVideo(video);
+	createHistogram( [], "combined "+paper_set.length, $("#paint").width(), canvas_height, "_tmp_" );
+
+	c = coder_array.splice(0,1);
+	
+	onSelectCoder( c[0].split("|"), restoreStateCoder, coder_array );
+}
+function restoreStateCoders( coder ) {
+	if( coder.length > 0 ) {
+		_g_coders_array = coder.split("#");
+		restoreStateCoder( _g_coders_array );
+	}
+}
+function restoreState( video, coder, time ) {
+	$("#combined").attr("checked", "checked");
+
+	onSelectVideo(video, restoreStateCoders, coder);
 	for( i=0; i<video_data.getNumberOfRows(); i++ ) {
 		if( video_data.getValue(i,0) == video ) {
 			video_table.setSelection([{row:i, column:null}]);
 			break;
 		}
 	}
-
-	if( coder.length > 0 ) {
-		onSelectCoder(coder);
-		for( i=0; i<coder_data.getNumberOfRows(); i++ ) {
-			if( $.inArray(coder_data.getValue(i,0), coder) != -1 ) {
-				coder_table.setSelection([{row:i, column:null}]);
-			}
-		}
-	}
-
 	if( player ) {
 		setTimeout( "restoreStateVideoTime(" + time + ")", 100 );
 	}
-
 }
 
 function saveState( comment ) {
-	turkId = "";
 	curr  = 0;
-	coder = getSelectedCoder();
 	video = getSelectedVideo();
-	
+
+	coder = "";
+	for( i=0; i<paper_content.length; i++ ) {
+		if( i>0 )
+			coder = coder + "#";
+		coder = coder + paper_content[i];
+	}
+
 	if( video == null ) {
 		alert("Select video first");
 		return;
@@ -848,18 +870,11 @@ function saveState( comment ) {
 	}
 
 	body = "vid=" + video;
-	if( coder.length != 0 ) {
-		for( i=0; i<coder.length; i++ ) {
-			if( i>=1 )
-				turkId = turkId + "|";
-			turkId = turkId + coder[i];
-		}
-		body = body + "&turkID=" + turkId;
-	}
-	
-	if( curr ) body = body + "&time=" + curr;
-
 	body = body + "&comment=" + comment;
+	if( coder != "" )
+		body = body + "&turkID=" + coder;
+	if( curr ) 
+		body = body + "&time=" + curr;
 
 	$.post(
 		base_url+"mark",
@@ -867,7 +882,7 @@ function saveState( comment ) {
 		function(dat) {
 			if( dat.id ) {
 				addMark( dat.id, comment )
-				setMarkBuffer( dat.id, video, turkId, ""+curr, comment );
+				setMarkBuffer( dat.id, video, coder, ""+curr, comment );
 				$("#send").parent().find("textarea").val("");
 			}
 		},
@@ -962,7 +977,7 @@ $(document).ready(function(){
 			alert( "Please select video first" );
 		} else {
 			var w = $("#paint").width();
-			createHistogram( [], "combined "+paper_set.length, w, canvas_height );
+			createHistogram( [], "combined "+paper_set.length, w, canvas_height, "_tmp_" );
 		}
 		return false;
 	} );
@@ -970,7 +985,8 @@ $(document).ready(function(){
 	$("#clearpaper").click( function() {
 		if( paper_set.length > 1 ) {
 			$("#paint div:gt(0)").remove();
-			paper_set.splice(1, paper_set.length-1);	
+			paper_set.splice(1, paper_set.length-1);
+			paper_content.splice(0, paper_content.length);
 		}
 		return false;
 	} );
