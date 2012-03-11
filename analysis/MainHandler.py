@@ -302,7 +302,7 @@ class MainHandler(tornado.web.RequestHandler):
 					end = long( f[end_index].split(":")[1] )
 					
 					if end - beg < video_len: video_len = end - beg
-					
+
 					space = 0
 					index = beg_index + 1
 					while index < end_index:
@@ -312,12 +312,12 @@ class MainHandler(tornado.web.RequestHandler):
 								index = index+2
 							else:
 								if index < end_index-1:
-									print coder["turkID"], "\t", vid, " [pp,c] does not match"
+									print coder, "\t", vid, " [pp,c] does not match"
 								index = index+1
 						elif f[index].split(":")[0] == "b":
 							elapse = long(f[index].split(":")[1]) - beg - space
-							if elapse > video_len + 1000:
-								print vid, "\t", coder["turkID"], "\tis outlier"
+							if elapse > video_len + 1500:
+								print vid, "\t", coder, "\tis outlier"
 								outlier = 1
 								break
 							else:
