@@ -176,7 +176,7 @@ class MainHandler(tornado.web.RequestHandler):
 								index = index+1
 						elif f[index].split(":")[0] == "b":
 							elapse = long(f[index].split(":")[1]) - beg - space
-							if elapse > video_len + 1000:
+							if elapse > video_len + 1500:
 								print vid, "\t", coder["turkID"], "\tis outlier"
 								message.append( vid + "," + coder["turkID"] )
 								outlier = 1
