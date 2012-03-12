@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import division
 import tornado.httpserver
 import tornado.web
 import tornado.database
@@ -76,7 +77,7 @@ class AnalysisHandler(tornado.web.RequestHandler):
 				tid = f["turkID"]
 				dat = f["feedback"]
 
-				filename = root + "/feedback/" + tid + "_" + vid + ".txt"
+				filename = root + "/feedback/" + tid + "+" + vid + ".txt"
 
 				if not os.path.exists(filename):
 					print "[", lineno, "] writing to ", filename
@@ -103,15 +104,15 @@ class AnalysisHandler(tornado.web.RequestHandler):
 				if not os.path.exists(filename):
 					print "[", lineno, "] writing to ", filename
 					fhandle = open(filename, "w")
-					fhandle.write("age\t"+str(age))
-					fhandle.write("gender\t"+sex)
-					fhandle.write("loc\t"+str(loc))
+					fhandle.write("age\t" + str(age) + "\n")
+					fhandle.write("gender\t" + sex + "\n")
+					fhandle.write("loc\t" + str(loc) + "\n")
 
 					coder = {}
 					self.measure(psn, coder)
 
 					for k in coder.iterkeys():
-						fhandle.write(k+"\t"+str(coder[k]))
+						fhandle.write(k + "\t" + str(coder[k]) + "\n")
 					
 					fhandle.close()
 				else:
@@ -127,7 +128,7 @@ class AnalysisHandler(tornado.web.RequestHandler):
 				val = psiitem["psi"]
 				val = self.calculatePSI(val)
 				
-				filename = root + "/psi/" + tid + "_" + vid + ".txt"
+				filename = root + "/psi/" + tid + "+" + vid + ".txt"
 				
 				if not os.path.exists(filename):
 					print "[", lineno, "] writing to ", filename
@@ -145,6 +146,7 @@ class AnalysisHandler(tornado.web.RequestHandler):
 	def post(self):
 		type = self.get_argument("type")
 		if type == "retrieve":
+			print "[", type, "]"
 			self.retrieveData()
 			self.write("{\"success\": \"1\"}")
 		
