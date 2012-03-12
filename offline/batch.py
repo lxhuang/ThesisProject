@@ -40,7 +40,7 @@ class Batch:
 				if extension == ".txt":
 					cls.coder_info_buffer[name] = dict()
 
-					fhandler = open( filename, "r" )
+					fhandler = open( os.path.join(personality_path, filename), "r" )
 					info = fhandler.readlines()
 					fhandler.close()
 
@@ -73,7 +73,7 @@ class Batch:
 		s = sum(ts)
 		for i in range(0, len(ts)):
 			p = ts[i]/s
-			if p != 0: ent = ent - p * math.log10(p)
+			if p != 0: ent = ent - p * math.log(p)
 		
 		return ent
 
@@ -139,14 +139,15 @@ class Batch:
 						index = index + 2
 					else:
 						if index < end_index-1:
-							print filename, " [pp,c] does not match"
+							pass
+							#print filename, " [pp,c] does not match"
 						index = index + 1
 				elif dat[index].split(":")[0] == "b":
 					elapse = long(dat[index].split(":")[1]) - beg - space
 					feedback.append(elapse)
 					index = index + 1
 				else:
-					print filename, " ", dat[index], " => weird format"
+					#print filename, " ", dat[index], " => weird format"
 					index = index+1
 		
 		except Exception, exception:
@@ -163,6 +164,7 @@ class Batch:
 		try:
 			ts_set = []
 			coder_dat_buf = dict()
+			coder_dat_len = dict()
 			videoL = 999999999
 
 			for c in cls.coder_set:
@@ -173,28 +175,41 @@ class Batch:
 					continue
 				
 				filename = os.path.join(cls.data_root, "feedback/"+name+".txt")
-				print "[_getDataOfVideo] reading => ", filename
+				#print "[_getDataOfVideo] reading => ", filename
 
 				feedback = []
 				videoLen = self._processFeedbackFile( filename, feedback )
 				coder_dat_buf[name] = feedback
+				coder_dat_len[name] = videoLen
 
 				if videoLen < videoL: 
 					videoL = videoLen
 			
-			for k in coder_dat_buf.iterkeys():
-				v = coder_dat_buf[k]
-				if v[-1] - v[0] > videoL + 1500:
-					cls.outlier_buffer[k] = 1
-					print "[_getDataOfVideo] ", k, " is outlier"
-				else:
-					ts_set.append(v)
+			try:
+				for k in coder_dat_buf.iterkeys():
+					v = coder_dat_buf[k]
+					if len(v) == 0:
+						#print "[_getDataOfVideo] ", videoId, " ", k, " has no data"
+						pass
+					
+					elif coder_dat_len[k] > videoL + 2500:
+						cls.outlier_buffer[k] = 1
+						#print coder_dat_len[k], ";", videoL, " [_getDataOfVideo] ", videoId, " ", k, " is outlier"
+					
+					else:
+						ts_set.append(v)
+			except Exception, exception:
+				raise exception
 
-			aggregated = self._aggregate(ts_set, videoL)
+
+			_aggregated = self._aggregate(ts_set, videoL)
+			for _item in _aggregated:
+				aggregated.append(_item)
+
 			return videoL
 		
 		except Exception, exception:
-			raise MyException("[_getDataOfVideo] raises exception" + str(exception))
+			raise MyException("[_getDataOfVideo] raises exception " + str(exception))
 
 
 	def process(self, videoId, coders):
@@ -214,8 +229,8 @@ class Batch:
 			feedback = []
 			videoLen = self._processFeedbackFile( filename, feedback )
 
-			if videoLen > videoL + 1500:
-				print "[process] ", filename, " is outlier"
+			if videoLen > videoL + 2500:
+				print videoLen, ";", videoL, " [process] ", name, " is outlier"
 				continue
 			else:
 				ts_set.append(feedback)
@@ -226,7 +241,7 @@ class Batch:
 		feedback_ent = self._entropy(combined)
 		feedback_cor = self._crossCorrelation(consensus, combined)
 
-		print feedback_num, "\t", feedback_ent, "\t", feedback_cor
+		#print feedback_num, "\t", feedback_ent, "\t", feedback_cor
 
 		return [feedback_num, feedback_ent, feedback_cor]
 
@@ -240,23 +255,29 @@ class Batch:
 
 			for coder in cls.coder_info_buffer.iterkeys():
 				if attr == "gender" or attr == "loc":
-					value = coder_info_buffer[coder][attr]
+					value = cls.coder_info_buffer[coder][attr]
+				
 				elif attr == "psi":
 					filename = os.path.join(cls.data_root, "psi/" + coder + "+" + videoId + ".txt")
-					fhandler = open(filename)
+					
+					fhandler = open(filename, "r")
 					value = float(fhandler.readline())
 					fhandler.close()
+				
 				else:
-					value = float(coder_info_buffer[coder][attr])
+					value = float(cls.coder_info_buffer[coder][attr])
 
 				view.append( [coder, value] )
 
 			view = sorted( view, key=lambda ele: ele[1] )
 
-			json.dumps(view)
+			#print "[observe] => ", json.dumps(view)
 
 			coder_set1 = []
 			coder_set2 = []
+
+			if num > len(view)/2:
+				raise MyException("observe too many items...");
 			
 			for i in range(0, num):
 				coder_set1.append( view[i][0] )
@@ -265,11 +286,40 @@ class Batch:
 			stat1 = self.process(videoId, coder_set1)
 			stat2 = self.process(videoId, coder_set2)
 
+			return [stat1, stat2]
+
 		except Exception, exception:
 			print "observe => ", exception
 
 	
+	def observeAll(self, attr, num):
+		cls = Batch
+
+		res = dict()
+
+		for v in cls.video_set:
+			res[v] = self.observe(v, attr, num)
+			#print "++++++++++++++++++++++++++++++\n\n"
+
+		
+		print "videoId\tFeedback#\tEntropy\tCross Correlation\tFeedback#\tEntropy\tCross Correlation"
+		for v in res.iterkeys():
+			print v, "\t", res[v][0][0], "\t", res[v][0][1], "\t", res[v][0][2], "\t", res[v][1][0], "\t", res[v][1][1], "\t", res[v][1][2] 
+
+		print "++++++++++++++++++++++++++++++\n\n"
 
 
 if __name__ == "__main__":
-	pass
+	batch = Batch()
+	batch.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
+	
+	batch.observeAll("agreeableness", 33)
+	
+	batch.observeAll("gender", 80)
+	
+	batch.observeAll("loc", 99)
+
+	batch.observeAll("conscientiousness", 36)
+
+	batch.observeAll("openness", 22)
+
