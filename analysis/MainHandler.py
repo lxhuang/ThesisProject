@@ -126,10 +126,10 @@ class MainHandler(tornado.web.RequestHandler):
 				coders = self.db.query("SELECT distinct turkID FROM verify")
 				
 				ts_set = []
-				outlier= 0
 				
 				# messages sent back to the client
 				message = []
+				outlier = 0
 
 				video_len = 99999999
 				for coder in coders:
@@ -139,7 +139,6 @@ class MainHandler(tornado.web.RequestHandler):
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder["turkID"], vid)
 					if not f:
 						print "[", coder["turkID"], vid, "] does not exist!"
-						ts_set.append(ts)
 						continue
 
 					f = f["feedback"].split(",")
@@ -169,24 +168,24 @@ class MainHandler(tornado.web.RequestHandler):
 						if f[index].split(":")[0] == "pp":
 							if f[index+1].split(":")[0] == "c":
 								space = space + long(f[index+1].split(":")[1]) - long(f[index].split(":")[1])
-								index = index+2
+								index = index + 2
 							else:
 								if index < end_index-1:
 									print coder["turkID"], "\t", vid, " [pp,c] does not match"
-								index = index+1
+								index = index + 1
 						elif f[index].split(":")[0] == "b":
 							elapse = long(f[index].split(":")[1]) - beg - space
 							if elapse > video_len + 1500:
-								print vid, "\t", coder["turkID"], "\tis outlier"
+								print vid, "\t", coder["turkID"], " is outlier"
 								message.append( vid + "," + coder["turkID"] )
 								outlier = 1
 								break
 							else:
 								ts.append(elapse)
-								index = index+1
+								index = index + 1
 						else:
-							print coder["turkID"], vid, f[index], " =>weird format"
-							index = index+1
+							print coder["turkID"], vid, f[index], " => weird format"
+							index = index + 1
 
 					if outlier == 0:
 						ts_set.append(ts)
@@ -231,18 +230,18 @@ class MainHandler(tornado.web.RequestHandler):
 					if f[index].split(":")[0] == "pp":
 						if f[index+1].split(":")[0] == "c":
 							space = space + long(f[index+1].split(":")[1]) - long(f[index].split(":")[1])
-							index = index+2
+							index = index + 2
 						else:
 							if index < end_index-1:
 								print turkId, "\t", vid, " [pp,c] does not match"
-							index = index+1
+							index = index + 1
 					elif f[index].split(":")[0] == "b":
 						elapse = long(f[index].split(":")[1]) - beg - space
 						ts.append(elapse)
-						index = index+1
+						index = index + 1
 					else:
 						print turkId, vid, f[index], " =>weird format"
-						index = index+1
+						index = index + 1
 
 				ts_set.append(ts)
 
@@ -267,8 +266,8 @@ class MainHandler(tornado.web.RequestHandler):
 
 		elif t == Type.DATABYCODERS:
 			try:
-				ts_set    = []
-				outlier   = 0
+				ts_set = []
+				outlier = 0
 				video_len = 99999999
 
 				coders = turkIds.split("|")
@@ -279,7 +278,6 @@ class MainHandler(tornado.web.RequestHandler):
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder, vid)
 					if not f:
 						print "[", coder, vid, "] does not exist!"
-						ts_set.append(ts)
 						continue
 
 					f = f["feedback"].split(",")
@@ -309,11 +307,11 @@ class MainHandler(tornado.web.RequestHandler):
 						if f[index].split(":")[0] == "pp":
 							if f[index+1].split(":")[0] == "c":
 								space = space + long(f[index+1].split(":")[1]) - long(f[index].split(":")[1])
-								index = index+2
+								index = index + 2
 							else:
 								if index < end_index-1:
 									print coder, "\t", vid, " [pp,c] does not match"
-								index = index+1
+								index = index + 1
 						elif f[index].split(":")[0] == "b":
 							elapse = long(f[index].split(":")[1]) - beg - space
 							if elapse > video_len + 1500:
@@ -322,10 +320,10 @@ class MainHandler(tornado.web.RequestHandler):
 								break
 							else:
 								ts.append(elapse)
-								index = index+1
+								index = index + 1
 						else:
 							print coder["turkID"], vid, f[index], " =>weird format"
-							index = index+1
+							index = index + 1
 
 					if outlier == 0:
 						ts_set.append(ts)

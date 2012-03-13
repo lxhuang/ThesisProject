@@ -286,6 +286,8 @@ class Batch:
 			stat1 = self.process(videoId, coder_set1)
 			stat2 = self.process(videoId, coder_set2)
 
+			print videoId, " => ", len(coder_set1), ";", len(coder_set2)
+
 			return [stat1, stat2]
 
 		except Exception, exception:
@@ -301,7 +303,7 @@ class Batch:
 			res[v] = self.observe(v, attr, num)
 			#print "++++++++++++++++++++++++++++++\n\n"
 
-		
+		print "[[", attr, "]]"
 		print "videoId\tFeedback#\tEntropy\tCross Correlation\tFeedback#\tEntropy\tCross Correlation"
 		for v in res.iterkeys():
 			print v, "\t", res[v][0][0], "\t", res[v][0][1], "\t", res[v][0][2], "\t", res[v][1][0], "\t", res[v][1][1], "\t", res[v][1][2] 
@@ -313,13 +315,20 @@ if __name__ == "__main__":
 	batch = Batch()
 	batch.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
 	
-	batch.observeAll("agreeableness", 33)
-	
 	batch.observeAll("gender", 80)
-	
 	batch.observeAll("loc", 99)
-
+	batch.observeAll("extroversion", 12)
+	batch.observeAll("agreeableness", 33)
 	batch.observeAll("conscientiousness", 36)
-
+	batch.observeAll("neuroticism", 30)
 	batch.observeAll("openness", 22)
+	batch.observeAll("selfconsciousness", 32)
+	batch.observeAll("otherfocusscale", 40)
+	batch.observeAll("shyness", 30)
+	batch.observeAll("selfmonitor", 13)
+	
+
+
+
+
 
