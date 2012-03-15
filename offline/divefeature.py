@@ -78,7 +78,8 @@ class DiveFeature:
 			print "load => ", exception
 
 	
-	def _matchWithFeature(self, videoId, coderId, coder_feature, video_feature):
+	# window is in milliseconds.
+	def _matchWithFeature(self, coderId, videoId, coder_feature, video_feature, window=1000):
 		try:
 			cls = DiveFeature
 
@@ -98,19 +99,17 @@ class DiveFeature:
 				
 					for feature_value in feature_values:
 						for f in feedback:
-							if feature_value[0] <= f and f <= feature_value[1]+1000:
-								key1 = feature_name
-								key2 = feature_name
-
-								if key1 in video_feature:
-									video_feature[key1] = video_feature[key1] + 1
+							if feature_value[0] <= f and f <= feature_value[1]+window:
+								
+								if feature_name in video_feature:
+									video_feature[feature_name] = video_feature[feature_name] + 1
 								else:
-									video_feature[key1] = 1
+									video_feature[feature_name] = 1
 
-								if key2 in coder_feature:
-									coder_feature[key2] = coder_feature[key2] + 1
+								if feature_name in coder_feature:
+									coder_feature[feature_name] = coder_feature[feature_name] + 1
 								else:
-									coder_feature[key2] = 1
+									coder_feature[feature_name] = 1
 			except Exception, exception:
 				print exception
 
@@ -133,19 +132,20 @@ class DiveFeature:
 				
 					if c not in coder_feature: coder_feature[c] = dict()
 
-					self._matchWithFeature( v, c, coder_feature[c], video_feature[v] )
+					self._matchWithFeature( c, v, coder_feature[c], video_feature[v] )
 
-				print "[matchWithFeature] => processing ", v
+				print "[matchWithFeature] => processed ", v
 
+			
+			for v in cls.video_set:
 				res = []
 				for k in video_feature[v].iterkeys():
-				#	value = video_feature[v][k]
 					value = video_feature[v][k] / ( len(cls.video_info_buffer[v][k]) * len(cls.coder_set) )
 					res.append( [k, value] )
 
 				res = sorted( res, key=lambda ele: ele[1] )
 
-			#	for r in res: print r[0], " => ", r[1]
+				for r in res: print r[0], " => ", r[1]
 
 			for c in cls.coder_set:
 				print c, " => "
