@@ -145,6 +145,8 @@ class DiveFeature:
 
 				res = sorted( res, key=lambda ele: ele[1] )
 
+				print "{{", v, "}} => "
+
 				for r in res: print r[0], " => ", r[1]
 
 			for c in cls.coder_set:
