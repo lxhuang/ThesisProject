@@ -6,6 +6,12 @@ import math
 import json
 
 class DiveFeature:
+	"""
+	dive into the speaker's feature
+	in each video, what kind of speaker features is likely to trigger bc
+	for each coder, what kind of speaker features do they focus on
+	"""
+
 	data_root = ""
 	coder_set = set()
 	video_set = set()
@@ -110,6 +116,7 @@ class DiveFeature:
 									coder_feature[feature_name] = coder_feature[feature_name] + 1
 								else:
 									coder_feature[feature_name] = 1
+			
 			except Exception, exception:
 				print exception
 
@@ -138,20 +145,20 @@ class DiveFeature:
 
 			
 			for v in cls.video_set:
+				print "{{", v, "}} => "
+
 				res = []
+				
 				for k in video_feature[v].iterkeys():
 					value = video_feature[v][k] / ( len(cls.video_info_buffer[v][k]) * len(cls.coder_set) )
 					res.append( [k, value] )
 
 				res = sorted( res, key=lambda ele: ele[1] )
 
-				print "{{", v, "}} => "
+				for r in res: print "\t", r[0], " => ", r[1]
 
-				for r in res: print r[0], " => ", r[1]
-
+			lineno = 1
 			for c in cls.coder_set:
-				print c, " => "
-
 				res = []
 
 				for k in coder_feature[c].iterkeys():
@@ -160,8 +167,21 @@ class DiveFeature:
 					
 				res = sorted( res, key=lambda ele: ele[1] )
 
-				for r in res: print r[0], " => ", r[1]
+				line = "[" + str(lineno) + "] " + c + " => "
+				lineno = lineno + 1
+				
+				#for r in res: print r[0], " => ", r[1]
 
+				for r in res[-10:-1]: line = line + "{" + str(r[0]) + "," + str(r[1]) + "} "
+				
+				#word = "massage"
+				#if word in coder_feature[c]:
+				#	line = line + str( coder_feature[c][word] )
+				#else:
+				#	line = line + "0"
+
+				print line
+				
 		
 		except Exception, exception:
 			print "matchWithFeature => ", exception
