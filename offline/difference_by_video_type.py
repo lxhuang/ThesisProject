@@ -31,11 +31,11 @@ class DifferenceByVideoType:
 		try:
 			filtered_coder = []
 			for coder in cls.batch.coder_info_buffer.iterkeys():
-				if not self._filter(cls.batch.coder_info_buffer[coder], conditions):
-					continue
-				filtered_coder.append(coder)
-
+				if self._filter(cls.batch.coder_info_buffer[coder], conditions):
+					filtered_coder.append(coder)
+			
 			stat = cls.batch.process(videoId, filtered_coder)
+			stat[0] = stat[0] / len(filtered_coder)
 			return stat
 		except Exception, exception:
 			print "_process => ", exception
@@ -57,12 +57,30 @@ if __name__ == "__main__":
 		"xAZ3-QGMWjo": ["f", 127, 5.38]
 	}
 
+	# check about the rapport score
+	print "compare with Rapport Score"
 	for k in video_info:
-		empty_conditions = {}
+		empty_conditions = {"loc": "us"}
+		
 		stat = app.observe( k, empty_conditions )
+		
 		video_len = video_info[k][1]
 		average_feedback_num = stat[0] / video_len
-		print k, " => ", average_feedback_num, stat[1], stat[2]
+		print k, " => ", video_info[k][0], "\t", video_info[k][2], "\t", average_feedback_num, "\t", stat[1], "\t", stat[2]
 
+	
 
+	# check the gender (match/mismatch)
+	print "\n\ncompare using the gender"
+	for k in video_info:
+		gender = video_info[k][0]
+
+		gender_filter = {"gender": "female", "loc": "us"}
+		stat_f = app.observe( k, gender_filter )
+		print gender, k, " => f ", stat_f[0], "\t", stat_f[1], "\t", stat_f[2]
 		
+		gender_filter = {"gender": "male", "loc": "us"}
+		stat_m = app.observe( k, gender_filter )
+		print gender, k, " => m ", stat_m[0], "\t", stat_m[1], "\t", stat_m[2]
+
+

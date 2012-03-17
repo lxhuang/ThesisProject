@@ -46,7 +46,7 @@ class Batch:
 
 					for i in info:
 						[k, v] = i.split("\t")
-						cls.coder_info_buffer[name][k] = v
+						cls.coder_info_buffer[name][k] = v.strip()
 		
 		except Exception, exception:
 			print "load => ", exception
