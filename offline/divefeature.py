@@ -35,7 +35,7 @@ class DiveFeature:
 					cls.coder_set.add( turkId )
 					cls.video_set.add( videoId )
 
-			
+
 			personality_path = os.path.join(cls.data_root, "personality")
 			for filename in os.listdir( personality_path ):
 				(name, extension) = os.path.splitext( filename )
@@ -48,9 +48,9 @@ class DiveFeature:
 
 					for i in info:
 						[k, v] = i.split("\t")
-						cls.coder_info_buffer[name][k] = v
+						cls.coder_info_buffer[name][k] = v.strip()
 
-			
+
 			feature_path = os.path.join(cls.data_root, "features")
 			for filename in os.listdir( feature_path ):
 				(name, extension) = os.path.splitext( filename )
@@ -72,9 +72,8 @@ class DiveFeature:
 						if len( feature_name.strip().split(" ") ) == 2:
 							continue
 
-						feature_value = feature_value.strip().split(" ")
 						index = 0
-
+						feature_value = feature_value.strip().split(" ")
 						cls.video_info_buffer[name][feature_name] = []
 						while index < len(feature_value):
 							cls.video_info_buffer[name][feature_name].append( [ float(feature_value[index])*1000, float(feature_value[index+1])*1000 ] )
@@ -94,29 +93,24 @@ class DiveFeature:
 			name = "+".join( [coderId, videoId] )
 			filename = os.path.join( cls.data_root, "feedback/" + name + ".txt" )
 
-			
 			batch = Batch()
 			videoLen = batch._processFeedbackFile(filename, feedback)
 
 			try:
 				for feature_name in cls.video_info_buffer[videoId].iterkeys():
-
 					feature_values = cls.video_info_buffer[videoId][feature_name]
-				
+					
 					for feature_value in feature_values:
 						for f in feedback:
 							if feature_value[0] <= f and f <= feature_value[1]+window:
-								
 								if feature_name in video_feature:
 									video_feature[feature_name] = video_feature[feature_name] + 1
 								else:
 									video_feature[feature_name] = 1
-
 								if feature_name in coder_feature:
 									coder_feature[feature_name] = coder_feature[feature_name] + 1
 								else:
-									coder_feature[feature_name] = 1
-			
+									coder_feature[feature_name] = 1	
 			except Exception, exception:
 				print exception
 
@@ -132,13 +126,10 @@ class DiveFeature:
 			coder_feature = dict()	
 
 			for v in cls.video_set:
-			
 				video_feature[v] = dict()
-
 				for c in cls.coder_set:
-				
-					if c not in coder_feature: coder_feature[c] = dict()
-
+					if c not in coder_feature: 
+						coder_feature[c] = dict()
 					self._matchWithFeature( c, v, coder_feature[c], video_feature[v] )
 
 				print "[matchWithFeature] => processed ", v
@@ -148,7 +139,6 @@ class DiveFeature:
 				print "{{", v, "}} => "
 
 				res = []
-				
 				for k in video_feature[v].iterkeys():
 					value = video_feature[v][k] / ( len(cls.video_info_buffer[v][k]) * len(cls.coder_set) )
 					res.append( [k, value] )
@@ -157,10 +147,10 @@ class DiveFeature:
 
 				for r in res: print "\t", r[0], " => ", r[1]
 
+			
 			lineno = 1
 			for c in cls.coder_set:
 				res = []
-
 				for k in coder_feature[c].iterkeys():
 					value = coder_feature[c][k]
 					res.append( [k, value] )

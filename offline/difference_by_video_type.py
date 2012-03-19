@@ -19,8 +19,7 @@ class DifferenceByVideoType:
 	# condition is a dict to be used to filter coder
 	def _filter(self, coder, conditions):
 		for k in conditions.iterkeys():
-			v = conditions[k]
-			if coder[k] != v:
+			if coder[k] != conditions[k]:
 				return False
 		return True
 
@@ -38,7 +37,7 @@ class DifferenceByVideoType:
 			stat[0] = stat[0] / len(filtered_coder)
 			return stat
 		except Exception, exception:
-			print "_process => ", exception
+			print "observe => ", exception
 		
 	
 if __name__ == "__main__":
@@ -60,9 +59,9 @@ if __name__ == "__main__":
 	# check about the rapport score
 	print "compare with Rapport Score"
 	for k in video_info:
-		empty_conditions = {"loc": "us"}
+		loc_conditions = {"loc": "us"}
 		
-		stat = app.observe( k, empty_conditions )
+		stat = app.observe( k, loc_conditions )
 		
 		video_len = video_info[k][1]
 		average_feedback_num = stat[0] / video_len
@@ -71,7 +70,7 @@ if __name__ == "__main__":
 	
 
 	# check the gender (match/mismatch)
-	print "\n\ncompare using the gender"
+	print "\n\ncompare using the Gender"
 	for k in video_info:
 		gender = video_info[k][0]
 
