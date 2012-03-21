@@ -1004,6 +1004,8 @@ $(document).ready(function(){
 		createHistogram( [], "combined "+paper_set.length, w, canvas_height, "_tmp_" );
 
 		onSelectCoder( inputData );
+
+		return false;
 	} );
 
 	updater.poll();
