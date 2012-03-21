@@ -67,7 +67,7 @@ if __name__ == "__main__":
 		average_feedback_num = stat[0] / video_len
 		print k, " => ", video_info[k][0], "\t", video_info[k][2], "\t", average_feedback_num, "\t", stat[1], "\t", stat[2]
 
-	
+
 
 	# check the gender (match/mismatch)
 	print "\n\ncompare using the Gender"
