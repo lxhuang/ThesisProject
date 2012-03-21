@@ -46,11 +46,22 @@ class ClusterCoder:
 			print "total sample size: ", len(data)
 			
 			print "computing the distance table"
+			
+			fhandler = open("dist_table.txt", "w")
+			fhandler1 = open("coder.txt", "w")
 			for d1 in data:
+				
+				line = ""
 				for d2 in data:
 					key = d1["coder"] + "+" + d2["coder"]
 					cls.dist_table[key] = self._distance( d1, d2 )
-					#print key, cls.dist_table[key]
+					line = line + str( cls.dist_table[key] ) + "\t"
+				
+				fhandler.write(line+"\n")
+				fhandler1.write(d1["coder"]+"\n")
+			
+			fhandler.close()
+			fhandler1.close()
 
 		except Exception, exception:
 			print "_prepareData => ", exception
@@ -240,13 +251,13 @@ class ClusterCoder:
 			self._calculateNewCentroids( data, centroids )
 			times = times - 1
 
-		#self._output( data, attr )
+		self._output( data, attr )
 
 
 if __name__ == "__main__":
 	app = ClusterCoder()
 	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
-	app.cluster("l_S-RM-8l9w", 2, "extroversion")
-	#app.testDistance("l_S-RM-8l9w", "A1VLPSDPFF31L7", "A1VLPSDPFF31L7")
+	app.cluster("l_S-RM-8l9w", 3, "agreeableness")
+	#app.testDistance("l_S-RM-8l9w", "A1Y4LA3VWRF6S6", "A3AVZHEIMSKFD3")
 
 

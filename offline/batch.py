@@ -148,7 +148,7 @@ class Batch:
 					index = index + 1
 				else:
 					#print filename, " ", dat[index], " => weird format"
-					index = index+1
+					index = index + 1
 		
 		except Exception, exception:
 			print exception

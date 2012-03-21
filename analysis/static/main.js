@@ -994,6 +994,18 @@ $(document).ready(function(){
 	$("#openNote").click( function() {$("#notes").show();} );
 	$("#closeNote").click( function() {$("#notes").hide();} );
 
+	
+	$("#showcoder").click( function() {
+		inputData = $.trim( $("#coderdata textarea").val() );
+		inputData = inputData.split("\n");
+		$("#coderdata textarea").val("");
+
+		w = $("#paint").width();
+		createHistogram( [], "combined "+paper_set.length, w, canvas_height, "_tmp_" );
+
+		onSelectCoder( inputData );
+	} );
+
 	updater.poll();
 	notice = "c:" + $("#palette").attr("value") + "|a new guest comes";
 	newMessage( notice );
