@@ -11,10 +11,12 @@ class DisplaySCResult:
 	batch = None
 	clusters = dict()
 	dataroot = ""
+	videoId = ""
 
-	def load(self, root, screspath):
+	def load(self, root, screspath, video):
 		cls = DisplaySCResult
 
+		cls.videoId = video
 		cls.dataroot = root
 		cls.batch = Batch()
 		cls.batch.load(root)
@@ -62,7 +64,7 @@ class DisplaySCResult:
 				
 				items = cls.clusters[classId]
 				for item in items:
-					psi_file = cls.dataroot + "psi/" + item + ".txt"
+					psi_file = cls.dataroot + "psi/" + item + "+" + cls.videoId + ".txt"
 					fhandler = open(psi_file, "r")
 					val = fhandler.readline()
 					val = float(val.strip())
@@ -98,10 +100,11 @@ class DisplaySCResult:
 
 if __name__ == "__main__":
 	app = DisplaySCResult()
-	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/", "sc_result.txt")
+	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/", "sc_result.txt", "qrHqKOkHNME")
 	
 	app.analyze("loc")
 	app.analyze("gender")
+	app.analyze("psi")
 	app.analyze("extroversion")
 	app.analyze("agreeableness")
 	app.analyze("conscientiousness")

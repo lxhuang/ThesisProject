@@ -257,7 +257,7 @@ class ClusterCoder:
 if __name__ == "__main__":
 	app = ClusterCoder()
 	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
-	app.cluster("UcaYbyw8MZo", 2, "agreeableness")
+	app.cluster("qrHqKOkHNME", 2, "agreeableness")
 #	app.testDistance("l_S-RM-8l9w", "A1Y4LA3VWRF6S6", "A3AVZHEIMSKFD3")
 
 
