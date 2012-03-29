@@ -164,12 +164,25 @@ class ClusterCoder:
 		cls = ClusterCoder
 		
 		measure = dict()
+		clusters = dict()
 
 		for d in data:
-			print d["classId"], "\t", d["coder"], "\t", cls.batch.coder_info_buffer[d["coder"]][attr]
+#			print d["classId"], "\t", d["coder"], "\t", cls.batch.coder_info_buffer[d["coder"]][attr]
 			if d["classId"] not in measure:
 				measure[d["classId"]] = []
 			measure[d["classId"]].append( float(cls.batch.coder_info_buffer[d["coder"]][attr]) )
+			
+			if d["classId"] not in clusters:
+				clusters[d["classId"]] = []
+			clusters[d["classId"]].append( d["coder"] )
+		
+		fhandler = open("k_means_cluster.txt", "w")
+		for c in clusters:
+			items = clusters[c]
+			for item in items:
+				fhandler.write( item+"\n" )
+			fhandler.write("\n\n")
+		fhandler.close()
 		
 		print "distribution of ", attr
 		for k in measure:
@@ -209,6 +222,8 @@ class ClusterCoder:
 			alen = len(adat)
 			blen = len(bdat)
 
+			return abs(alen-blen)
+
 			#print adat
 			#print bdat
 
@@ -218,8 +233,10 @@ class ClusterCoder:
 						score = score + 1
 					if bdat[j] > adat[i] + win:
 						break
-			
-			return -(2*score) / (alen+blen)
+			d = 2*score / (alen+blen)
+			d = 1 if d > 1 else d
+			return 1 - d
+			#return -(2*score) / (alen+blen)
 		except Exception, exception:
 			print "_distance", exception
 
@@ -257,7 +274,17 @@ class ClusterCoder:
 if __name__ == "__main__":
 	app = ClusterCoder()
 	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
-	app.cluster("qrHqKOkHNME", 2, "agreeableness")
+	
+	app.cluster("l_S-RM-8l9w", 3, "agreeableness")
+#	app.cluster("UcaYbyw8MZo", 3, "agreeableness")
+#	app.cluster("qrHqKOkHNME", 3, "agreeableness")
+#	app.cluster("f7e91xGHQJ8", 3, "agreeableness")
+#	app.cluster("f_U76yiaexg", 3, "agreeableness")
+#	app.cluster("4M8tfXK8Y1Y", 3, "agreeableness")
+#	app.cluster("xAZ3-QGMWjo", 3, "agreeableness")
+#	app.cluster("bfBMc4RDafg", 3, "agreeableness")
+
+#	app.cluster("qrHqKOkHNME", 3, "shyness")
 #	app.testDistance("l_S-RM-8l9w", "A1Y4LA3VWRF6S6", "A3AVZHEIMSKFD3")
 
 

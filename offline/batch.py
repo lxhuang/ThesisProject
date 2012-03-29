@@ -24,17 +24,8 @@ class Batch:
 
 			cls.data_root = root
 
-			feedback_path = os.path.join(cls.data_root, "feedback")
 			
-			for filename in os.listdir( feedback_path ):
-				(name, extension) = os.path.splitext( filename )
-				if extension == ".txt":
-					[turkId, videoId] = name.split("+")
-					cls.coder_set.add( turkId )
-					cls.video_set.add( videoId )
-
 			personality_path = os.path.join(cls.data_root, "personality")
-			
 			for filename in os.listdir( personality_path ):
 				(name, extension) = os.path.splitext( filename )
 				if extension == ".txt":
@@ -47,6 +38,21 @@ class Batch:
 					for i in info:
 						[k, v] = i.split("\t")
 						cls.coder_info_buffer[name][k] = v.strip()
+
+
+			feedback_path = os.path.join(cls.data_root, "feedback")
+			for filename in os.listdir( feedback_path ):
+				(name, extension) = os.path.splitext( filename )
+				if extension == ".txt":
+					[turkId, videoId] = name.split("+")
+				#	if cls.coder_info_buffer[turkId]["loc"] == "us":
+					cls.coder_set.add( turkId )
+					cls.video_set.add( videoId )
+
+
+			
+			print len(cls.coder_set)
+			print len(cls.video_set)
 		
 		except Exception, exception:
 			print "load => ", exception
@@ -140,14 +146,14 @@ class Batch:
 					else:
 						if index < end_index-1:
 							pass
-							#print filename, " [pp,c] does not match"
+						#	print filename, " [pp,c] does not match"
 						index = index + 1
 				elif dat[index].split(":")[0] == "b":
 					elapse = long(dat[index].split(":")[1]) - beg - space
 					feedback.append(elapse)
 					index = index + 1
 				else:
-					#print filename, " ", dat[index], " => weird format"
+				#	print filename, " ", dat[index], " => weird format"
 					index = index + 1
 		
 		except Exception, exception:
@@ -175,26 +181,26 @@ class Batch:
 					continue
 				
 				filename = os.path.join(cls.data_root, "feedback/"+name+".txt")
-				#print "[_getDataOfVideo] reading => ", filename
+			#	print "[_getDataOfVideo] reading => ", filename
 
 				feedback = []
 				videoLen = self._processFeedbackFile( filename, feedback )
 				coder_dat_buf[name] = feedback
 				coder_dat_len[name] = videoLen
 
-				if videoLen < videoL: 
+				if videoLen < videoL:
 					videoL = videoLen
 			
 			try:
 				for k in coder_dat_buf.iterkeys():
 					v = coder_dat_buf[k]
 					if len(v) == 0:
-						#print "[_getDataOfVideo] ", videoId, " ", k, " has no data"
+					#	print "[_getDataOfVideo] ", videoId, " ", k, " has no data"
 						pass
 					
 					elif coder_dat_len[k] > videoL + 2500:
 						cls.outlier_buffer[k] = 1
-						#print coder_dat_len[k], ";", videoL, " [_getDataOfVideo] ", videoId, " ", k, " is outlier"
+					#	print coder_dat_len[k], ";", videoL, " [_getDataOfVideo] ", videoId, " ", k, " is outlier"
 					
 					else:
 						ts_set.append(v)
@@ -254,6 +260,9 @@ class Batch:
 			view = []
 
 			for coder in cls.coder_info_buffer.iterkeys():
+				if coder not in cls.coder_set:
+					continue
+					
 				if attr == "gender" or attr == "loc":
 					value = cls.coder_info_buffer[coder][attr]
 				
@@ -315,17 +324,17 @@ if __name__ == "__main__":
 	batch = Batch()
 	batch.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
 	
-	batch.observeAll("gender", 80)
-	batch.observeAll("loc", 99)
-	batch.observeAll("extroversion", 12)
-	batch.observeAll("agreeableness", 33)
-	batch.observeAll("conscientiousness", 36)
-	batch.observeAll("neuroticism", 30)
-	batch.observeAll("openness", 22)
-	batch.observeAll("selfconsciousness", 32)
-	batch.observeAll("otherfocusscale", 40)
-	batch.observeAll("shyness", 30)
-	batch.observeAll("selfmonitor", 13)
+	batch.observeAll("gender", 162)
+	batch.observeAll("loc", 100)
+	batch.observeAll("extroversion", 28)
+	batch.observeAll("agreeableness", 56)
+	batch.observeAll("conscientiousness", 67)
+	batch.observeAll("neuroticism", 15)
+#	batch.observeAll("openness", )
+	batch.observeAll("selfconsciousness", 52)
+	batch.observeAll("otherfocusscale", 81)
+	batch.observeAll("shyness", 7)
+	batch.observeAll("selfmonitor", 23)
 	
 
 

@@ -32,7 +32,16 @@ class DisplaySCResult:
 		fhandler.close()
 
 
-	def analyze(self, attr):
+	def _writeToFile(self, count, filename):
+		fhandler = open(filename, "w")
+		for classId in count.iterkeys():
+			items = count[classId]
+			for item in items:
+				fhandler.write( classId + "\t" + str(item) + "\n" )
+		fhandler.close()
+
+
+	def analyze(self, attr, writeToFile=False):
 		cls = DisplaySCResult
 
 		print "\nanalyze", attr
@@ -89,6 +98,9 @@ class DisplaySCResult:
 					val = float(val)
 					count[classId].append(val)
 
+			if writeToFile == True:
+				self._writeToFile( count, attr+".txt" )
+
 			for classId in count.iterkeys():
 				mean = sum(count[classId]) / len(count[classId])
 				std = 0
@@ -100,13 +112,13 @@ class DisplaySCResult:
 
 if __name__ == "__main__":
 	app = DisplaySCResult()
-	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/", "sc_result.txt", "qrHqKOkHNME")
+	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/", "sc_result.txt", "4M8tfXK8Y1Y")
 	
 	app.analyze("loc")
 	app.analyze("gender")
 	app.analyze("psi")
-	app.analyze("extroversion")
-	app.analyze("agreeableness")
+	app.analyze("extroversion", True)
+	app.analyze("agreeableness", True)
 	app.analyze("conscientiousness")
 	app.analyze("neuroticism")
 	app.analyze("openness")

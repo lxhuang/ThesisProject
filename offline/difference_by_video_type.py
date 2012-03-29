@@ -59,7 +59,8 @@ if __name__ == "__main__":
 	# check about the rapport score
 	print "compare with Rapport Score"
 	for k in video_info:
-		loc_conditions = {"loc": "us"}
+	#	loc_conditions = {"loc": "us"}
+		loc_conditions = {}
 		
 		stat = app.observe( k, loc_conditions )
 		
@@ -74,11 +75,11 @@ if __name__ == "__main__":
 	for k in video_info:
 		gender = video_info[k][0]
 
-		gender_filter = {"gender": "female", "loc": "us"}
+		gender_filter = {"gender": "female"}
 		stat_f = app.observe( k, gender_filter )
 		print gender, k, " => f ", stat_f[0], "\t", stat_f[1], "\t", stat_f[2]
 		
-		gender_filter = {"gender": "male", "loc": "us"}
+		gender_filter = {"gender": "male"}
 		stat_m = app.observe( k, gender_filter )
 		print gender, k, " => m ", stat_m[0], "\t", stat_m[1], "\t", stat_m[2]
 
