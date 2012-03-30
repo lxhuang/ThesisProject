@@ -361,6 +361,10 @@ function onSelectVideo(video, func, param) {
 	if( player ) {
 		player.loadVideoById(video);
 		player.mute();
+
+		player.setPlaybackQuality("small");
+		player.setPlaybackQuality("medium");
+
 		showMask("loading " + video + "...");
 
 		video_ready = 0;
