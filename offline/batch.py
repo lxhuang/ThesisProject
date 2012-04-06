@@ -247,7 +247,7 @@ class Batch:
 		feedback_ent = self._entropy(combined)
 		feedback_cor = self._crossCorrelation(consensus, combined)
 
-		#print feedback_num, "\t", feedback_ent, "\t", feedback_cor
+	#	print feedback_num, "\t", feedback_ent, "\t", feedback_cor
 
 		return [feedback_num, feedback_ent, feedback_cor]
 
@@ -280,13 +280,13 @@ class Batch:
 
 			view = sorted( view, key=lambda ele: ele[1] )
 
-			#print "[observe] => ", json.dumps(view)
+		#	print "[observe] => ", json.dumps(view)
 
 			coder_set1 = []
 			coder_set2 = []
 
 			if num > len(view)/2:
-				raise MyException("observe too many items...");
+				raise MyException("observe too many items...")
 			
 			for i in range(0, num):
 				coder_set1.append( view[i][0] )
@@ -310,7 +310,7 @@ class Batch:
 
 		for v in cls.video_set:
 			res[v] = self.observe(v, attr, num)
-			#print "++++++++++++++++++++++++++++++\n\n"
+		#	print "++++++++++++++++++++++++++++++\n\n"
 
 		print "[[", attr, "]]"
 		print "videoId\tFeedback#\tEntropy\tCross Correlation\tFeedback#\tEntropy\tCross Correlation"

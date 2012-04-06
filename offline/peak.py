@@ -159,17 +159,24 @@ class Peak:
 	def peakify_coders(self, videoId, attr, num):
 		cls = Peak
 
-		coders = self.get_tail_coders(videoId, attr, num)
+		coders = cls.get_tail_coders(videoId, attr, num)
+		combined1 = cls.aggregated_coders(videoId, coders[0])
+		combined2 = cls.aggregated_coders(videoId, coders[1])
 
+		peaks1 = cls._process(combined1, len(coders[0]))
+		peaks2 = cls._process(combined2, len(coders[1]))
+
+		return [peaks1, peaks2]
 
 
 
 	def discretize(self, videoId, num):
 		print "{", videoId, "}"
 
-		cls = Peak
 		aggregated = []
-		videoL = cls.batch._getDataOfVideo(videoId, aggregated)
+
+		cls = Peak
+		cls.batch._getDataOfVideo(videoId, aggregated)
 
 		peaks = self._process(aggregated, num)
 		self._display_peaks(peaks, num)
