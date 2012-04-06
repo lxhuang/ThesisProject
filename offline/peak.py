@@ -96,7 +96,7 @@ class Peak:
 		self._combine_close(filtered_peaks)
 		return filtered_peaks
 
-	
+
 	def get_tail_coders(self, videoId, attr, num):
 		cls = Peak
 		
@@ -113,7 +113,7 @@ class Peak:
 				value = float(fhandler.readline())
 				fhandler.close()
 			else:
-				value = float( cls.coder_info_buffer[coder][attr] )
+				value = float(cls.batch.coder_info_buffer[coder][attr])
 			view.append( [coder, value] )
 		
 		view = sorted( view, key=lambda ele: ele[1] )
@@ -169,7 +169,7 @@ class Peak:
 		return [peaks1, peaks2]
 
 
-
+	
 	def discretize(self, videoId, num):
 		print "{", videoId, "}"
 
@@ -180,6 +180,10 @@ class Peak:
 
 		peaks = self._process(aggregated, num)
 		self._display_peaks(peaks, num)
+
+		coder_peaks = self.peakify_coders(videoId, "agreeableness", 56)
+		self._display_peaks(coder_peaks[0], 56)
+		self._display_peaks(coder_peaks[1], 56)
 
 		return peaks
 
