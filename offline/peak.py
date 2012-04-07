@@ -148,7 +148,6 @@ class Peak:
 
 			ts_set.append(feedback)
 
-		
 		combined = cls.batch._aggregate(ts_set, videoL)
 
 		return combined
@@ -166,7 +165,7 @@ class Peak:
 
 
 	
-	def discretize(self, videoId, num):
+	def discretize(self, videoId, num, attribution, tail_number):
 		print "{", videoId, "}"
 
 		aggregated = []
@@ -178,10 +177,6 @@ class Peak:
 		print "\nconsensus data"
 		self._display_peaks(peaks, num)
 
-		# configurable
-		attribution = "agreeableness"
-		tail_number = 56
-
 		coder_peaks = self.peakify_coders(videoId, attribution, tail_number)
 		print "\nlow", attribution
 		self._display_peaks(coder_peaks[0], tail_number)
@@ -191,10 +186,59 @@ class Peak:
 		return peaks
 
 
+	
+	def _compare_groups_with_mean(self, mean, total, group1, group2, tail_number):
+		res = []
+		for mean_p in mean:
+			t = mean_p[0] # time
+			p = mean_p[1]/total # percentage
+
+			p1 = None
+			p2 = None
+			
+			for group1_p in group1:
+				if abs(group1_p[0]-t) < 10:
+					p1 = group1_p[1]/tail_number
+					break
+			
+			for group2_p in group2:
+				if abs(group2_p[0]-t) < 10:
+					p2 = group2_p[1]/tail_number
+					break			
+			
+			res.append( [t/10, p, p1, p2] )
+		return res
+
+
+	def analyze(self, videoId, attribution, tail_number):
+		aggregated = []
+
+		cls = Peak
+		cls.batch._getDataOfVideo(videoId, aggregated)
+
+		peaks = self._process(aggregated, 350)
+		coder_peaks = self.peakify_coders(videoId, attribution, tail_number)
+
+		result = self._compare_groups_with_mean(peaks, 350, coder_peaks[0], coder_peaks[1], tail_number)
+
+		print "\n{", videoId, "}"
+		for r in result:
+			r[0] = str( r[0] )
+			r[1] = str( r[1] )
+			r[2] = str( r[2] ) if r[2] else '-'
+			r[3] = str( r[3] ) if r[3] else '-'
+			print "\t".join(r)
+
+
 if __name__ == "__main__":
 	app = Peak()
 	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
-	app.discretize("qrHqKOkHNME", 350)
+	
+	attribution = "extroversion"
+	tail_number = 28
+
+	app.discretize("qrHqKOkHNME", 350, attribution, tail_number)
+	app.analyze("qrHqKOkHNME", attribution, tail_number)
 
 
 
