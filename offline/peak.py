@@ -186,7 +186,6 @@ class Peak:
 		return peaks
 
 
-	
 	def _compare_groups_with_mean(self, mean, total, group1, group2, tail_number):
 		res = []
 		for mean_p in mean:
@@ -210,18 +209,41 @@ class Peak:
 		return res
 
 
+	def _removeSalientOnes(self, peaks, topN):
+		tmp_peaks = []
+		for p in peaks:
+			tmp_peaks.append(p)
+		tmp_peaks = sorted( tmp_peaks, key=lambda ele: ele[1] )
+		
+		# find the topN
+		tmp_peaks_time = []
+		for i in range(-topN, 0):
+			tmp_peaks_time.append( tmp_peaks[i][0] )
+		
+		for p in peaks:
+			if (p[0] in tmp_peaks_time):
+				peaks.remove(p)
+
+
 	def analyze(self, videoId, attribution, tail_number):
 		aggregated = []
 
 		cls = Peak
 		cls.batch._getDataOfVideo(videoId, aggregated)
 
+		# get peaks from the consensus view
 		peaks = self._process(aggregated, 350)
+		
+		# get rid of salient ones
+		self._removeSalientOnes(peaks, 5)
+		
+		# get peaks from coders of two tails
 		coder_peaks = self.peakify_coders(videoId, attribution, tail_number)
 
+		# compare with mean
 		result = self._compare_groups_with_mean(peaks, 350, coder_peaks[0], coder_peaks[1], tail_number)
 
-		print "\n{", videoId, "}"
+		print "\n{", attribution, "}"
 		for r in result:
 			r[0] = str( r[0] )
 			r[1] = str( r[1] )
@@ -234,11 +256,16 @@ if __name__ == "__main__":
 	app = Peak()
 	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
 	
-	attribution = "extroversion"
-	tail_number = 28
+	videoId = "l_S-RM-8l9w"
 
-	app.discretize("qrHqKOkHNME", 350, attribution, tail_number)
-	app.analyze("qrHqKOkHNME", attribution, tail_number)
+	app.discretize(videoId, 350, "extroversion", 28)
+	
+	app.analyze(videoId, "extroversion",      28)
+	app.analyze(videoId, "agreeableness",     56)
+	app.analyze(videoId, "conscientiousness", 67)
+	app.analyze(videoId, "neuroticism",       15)
+	app.analyze(videoId, "selfconsciousness", 52)
+	app.analyze(videoId, "selfmonitor",       23)
 
 
 
