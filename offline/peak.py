@@ -22,10 +22,10 @@ class Peak:
 
 		status = -1
 
-		STAT_DOWN 		= 0
-		STAT_UP 		= 1
-		STAT_UPPLATO 	= 2
-		STAT_DOWNPLATO 	= 3
+		STAT_DOWN       = 0
+		STAT_UP         = 1
+		STAT_UPPLATO    = 2
+		STAT_DOWNPLATO  = 3
 		
 		plato_beg = 0
 		plato_end = 0
