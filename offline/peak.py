@@ -79,10 +79,8 @@ class Peak:
 
 
 	def _display_peaks(self, peaks, num):
-		index = 1
 		for p in peaks:
-			print "[", index, "]", p[0]/10, "\t", p[1]/num
-			index = index + 1
+			print p[0]/10, "\t", p[1]/num
 
 
 	def _process(self, aggregated, num):
@@ -157,14 +155,12 @@ class Peak:
 
 
 	def peakify_coders(self, videoId, attr, num):
-		cls = Peak
+		coders = self.get_tail_coders(videoId, attr, num)
+		combined1 = self.aggregated_coders(videoId, coders[0])
+		combined2 = self.aggregated_coders(videoId, coders[1])
 
-		coders = cls.get_tail_coders(videoId, attr, num)
-		combined1 = cls.aggregated_coders(videoId, coders[0])
-		combined2 = cls.aggregated_coders(videoId, coders[1])
-
-		peaks1 = cls._process(combined1, len(coders[0]))
-		peaks2 = cls._process(combined2, len(coders[1]))
+		peaks1 = self._process(combined1, len(coders[0]))
+		peaks2 = self._process(combined2, len(coders[1]))
 
 		return [peaks1, peaks2]
 
@@ -179,11 +175,18 @@ class Peak:
 		cls.batch._getDataOfVideo(videoId, aggregated)
 
 		peaks = self._process(aggregated, num)
+		print "\nconsensus data"
 		self._display_peaks(peaks, num)
 
-		coder_peaks = self.peakify_coders(videoId, "agreeableness", 56)
-		self._display_peaks(coder_peaks[0], 56)
-		self._display_peaks(coder_peaks[1], 56)
+		# configurable
+		attribution = "agreeableness"
+		tail_number = 56
+
+		coder_peaks = self.peakify_coders(videoId, attribution, tail_number)
+		print "\nlow", attribution
+		self._display_peaks(coder_peaks[0], tail_number)
+		print "\nhigh", attribution
+		self._display_peaks(coder_peaks[1], tail_number)
 
 		return peaks
 
