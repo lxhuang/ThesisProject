@@ -158,11 +158,19 @@ class CompareCoderWithConsensus:
 if __name__ == "__main__":
 	app = CompareCoderWithConsensus()
 	app.load("/Users/lixinghu/Documents/projects/ThesisProject/analysis/data/")
+
 #	app.getCoderAttribution("A1EXDIVIESBKT0")
+
 	app.compareWithConsensus("l_S-RM-8l9w")
+#	app.compareWithConsensus("UcaYbyw8MZo")
+#	app.compareWithConsensus("qrHqKOkHNME")
+#	app.compareWithConsensus("f7e91xGHQJ8")
 
-
-
+#	app.compareWithConsensus("f_U76yiaexg")
+#	app.compareWithConsensus("4M8tfXK8Y1Y")
+#	app.compareWithConsensus("xAZ3-QGMWjo")
+#	app.compareWithConsensus("bfBMc4RDafg")
+	
 
 
 
