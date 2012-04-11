@@ -132,9 +132,10 @@ class CompareCoderWithConsensus:
 			else:
 				print c
 				attribution = self.getCoderAttribution(c)
-				line = result
+				line = [c]
+				line.extend( result )
 				line.extend( attribution[1] )
-			alllines.append(line)
+			alllines.append( line )
 		
 		
 		for line in alllines:
