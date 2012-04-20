@@ -10,7 +10,7 @@ class CompareCoderWithConsensus:
 
 	peak = None
 	
-	topN = 5
+	topN = 0
 
 	data_path = None
 
@@ -58,8 +58,8 @@ class CompareCoderWithConsensus:
 		consensusPeak = sorted(consensusPeak, key=lambda ele: ele[1])
 		
 		highAgreement = []
-		for i in range(-cls.topN, 0):
-			highAgreement.append( consensusPeak[i][0]*100 )
+	#	for i in range(-cls.topN, 0):
+	#		highAgreement.append( consensusPeak[i][0]*100 )
 		
 		
 		consensusTime = []
@@ -161,7 +161,7 @@ if __name__ == "__main__":
 
 #	app.getCoderAttribution("A1EXDIVIESBKT0")
 
-	app.compareWithConsensus("l_S-RM-8l9w")
+#	app.compareWithConsensus("l_S-RM-8l9w")
 #	app.compareWithConsensus("UcaYbyw8MZo")
 #	app.compareWithConsensus("qrHqKOkHNME")
 #	app.compareWithConsensus("f7e91xGHQJ8")
@@ -169,7 +169,7 @@ if __name__ == "__main__":
 #	app.compareWithConsensus("f_U76yiaexg")
 #	app.compareWithConsensus("4M8tfXK8Y1Y")
 #	app.compareWithConsensus("xAZ3-QGMWjo")
-#	app.compareWithConsensus("bfBMc4RDafg")
+	app.compareWithConsensus("bfBMc4RDafg")
 	
 
 
