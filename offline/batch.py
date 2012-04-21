@@ -181,6 +181,9 @@ class Batch:
 					continue
 				
 				filename = os.path.join(cls.data_root, "feedback/"+name+".txt")
+				if not os.path.exists(filename):
+					print filename, "not exists"
+					continue
 			#	print "[_getDataOfVideo] reading => ", filename
 
 				feedback = []

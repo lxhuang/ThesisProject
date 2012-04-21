@@ -235,7 +235,7 @@ class Peak:
 		peaks = self._process(aggregated, 350)
 		
 		# get rid of salient ones
-		self._removeSalientOnes(peaks, 5)
+	#	self._removeSalientOnes(peaks, 5)
 		
 		# get peaks from coders of two tails
 		coder_peaks = self.peakify_coders(videoId, attribution, tail_number)
