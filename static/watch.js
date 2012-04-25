@@ -279,6 +279,9 @@ function loadVideo() {
 		player.mute();
 		player.loadVideoById($.session("currentVideo"));
 	}
+	
+	player.setPlaybackQuality("small");
+	player.setPlaybackQuality("medium");
 
 	showMask("The video is now loading. Wait...");
 	state = 2;
