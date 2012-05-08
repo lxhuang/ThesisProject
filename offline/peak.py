@@ -258,6 +258,9 @@ if __name__ == "__main__":
 	
 	videoId = "l_S-RM-8l9w"
 
+	app.discretize("f_U76yiaexg", 350, "extroversion", 28)
+	app.discretize("4M8tfXK8Y1Y", 350, "extroversion", 28)
+
 	app.discretize(videoId, 350, "extroversion", 28)
 	
 	app.analyze(videoId, "extroversion",      28)
