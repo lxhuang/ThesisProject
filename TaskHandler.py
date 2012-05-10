@@ -7,7 +7,8 @@ import tornado.database
 import random
 
 
-video_string = "l_S-RM-8l9w,qrHqKOkHNME,xAZ3-QGMWjo,UcaYbyw8MZo,f_U76yiaexg,bfBMc4RDafg,4M8tfXK8Y1Y,f7e91xGHQJ8"
+#video_string = "l_S-RM-8l9w,qrHqKOkHNME,xAZ3-QGMWjo,UcaYbyw8MZo,f_U76yiaexg,bfBMc4RDafg,4M8tfXK8Y1Y,f7e91xGHQJ8"
+video_string = "BJTqFwhD3Zo,FitPohYSHFE,HD7_rI1YVV0,jXjKatmQCnE,2XIaHNhjlPs,PqSaLwyuNAE,Wedwm36_9tk,NBCqKx10Nic"
 
 class TaskHandler(tornado.web.RequestHandler):
 

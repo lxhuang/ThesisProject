@@ -10,7 +10,7 @@ class LabelHandler(tornado.web.RequestHandler):
 		return self.application.db
 
 	def get(self):
-		root_path = ""
+		root_path = "https://s3.amazonaws.com/multicomp_backchannel_videos/"
 		file_name = self.get_argument("v", None)
 		anno_type = self.get_argument("t", None)
 		if (not file_name) or (not anno_type):
