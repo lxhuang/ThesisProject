@@ -251,11 +251,12 @@ function createHistogram(dat, paper_id, w, h, content, defmax) {
 	if( defmax )
 		max=defmax;
 	else {
-		for(key in coder_info_buffer) {
-			if( coder_info_buffer.hasOwnProperty(key) ) {
-				max++;
-			}
-		}	
+	//	for(key in coder_info_buffer) {
+	//		if( coder_info_buffer.hasOwnProperty(key) ) {
+	//			max++;
+	//		}
+	//	}
+		max=coder_table.getNumberOfRows();	
 	}
 	paper.text(40, 10, "("+max+")");
 
@@ -390,6 +391,9 @@ function onSelectVideo(video, func, param) {
 		base_url,
 		"type=" + TYPE_DATABYVIDEO + "&vid=" + video,
 		function(dat) {
+			if( dat.coder ) {
+				updateCoderTableByCoders(dat.coder);
+			}
 			if( dat.res ) {
 				video_buffer[video] = dat.res;
 				createHistogram(dat.res, "consensus view", w, canvas_height);	
@@ -399,9 +403,6 @@ function onSelectVideo(video, func, param) {
 					addMessage("[outlier] "+value, "red");
 					outlier_buffer[ value ] = 1; // vid->turkId
 				} );
-			}
-			if( dat.coder ) {
-				updateCoderTableByCoders(dat.coder);
 			}
 			if( func ) {
 				func(param);
@@ -781,11 +782,10 @@ function updateCoderTableByCoders(coder_array) {
 		coder_data.removeRows(0, rowNum);
 		coder_data.addRows(coder_array.length);
 
-		i = 0;
-		for( coder in coder_array ) {
-			if( coder_info_buffer.hasOwnProperty(coder) ) {
-				coder_data.setCell(i, 0, coder);
-				coder_data.setCell(i, 1, coder_info_buffer[coder]["gender"]);
+		for( i=0; i<coder_array.length; i++ ) {
+			if( coder_info_buffer.hasOwnProperty(coder_array[i]) ) {
+				coder_data.setCell(i, 0, coder_array[i]);
+				coder_data.setCell(i, 1, coder_info_buffer[coder_array[i]]["gender"]);
 				i++;
 			}
 		}
