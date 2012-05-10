@@ -256,7 +256,7 @@ function createHistogram(dat, paper_id, w, h, content, defmax) {
 	//			max++;
 	//		}
 	//	}
-		max=coder_table.getNumberOfRows();	
+		max=coder_data.getNumberOfRows();
 	}
 	paper.text(40, 10, "("+max+")");
 
@@ -786,7 +786,6 @@ function updateCoderTableByCoders(coder_array) {
 			if( coder_info_buffer.hasOwnProperty(coder_array[i]) ) {
 				coder_data.setCell(i, 0, coder_array[i]);
 				coder_data.setCell(i, 1, coder_info_buffer[coder_array[i]]["gender"]);
-				i++;
 			}
 		}
 		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
