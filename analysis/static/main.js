@@ -400,6 +400,9 @@ function onSelectVideo(video, func, param) {
 					outlier_buffer[ value ] = 1; // vid->turkId
 				} );
 			}
+			if( dat.coder ) {
+				updateCoderTableByCoders(dat.coder);
+			}
 			if( func ) {
 				func(param);
 			}
@@ -769,6 +772,24 @@ function updateCoderAttribute(attr) {
 		}
 		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
 		createCoderDist( attr );
+	}
+}
+
+function updateCoderTableByCoders(coder_array) {
+	if( coder_data ) {
+		rowNum = coder_data.getNumberOfRows();
+		coder_data.removeRows(0, rowNum);
+		coder_data.addRows(coder_array.length);
+
+		i = 0;
+		for( coder in coder_array ) {
+			if( coder_info_buffer.hasOwnProperty(coder) ) {
+				coder_data.setCell(i, 0, coder);
+				coder_data.setCell(i, 1, coder_info_buffer[coder]["gender"]);
+				i++;
+			}
+		}
+		coder_table.draw(coder_data, {showRowNumber: true, height: "300px", width: "250px"});
 	}
 }
 

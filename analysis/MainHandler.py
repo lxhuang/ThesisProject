@@ -123,12 +123,14 @@ class MainHandler(tornado.web.RequestHandler):
 			
 		elif t == Type.DATABYVIDEO:
 			try:
-				coders = self.db.query("SELECT distinct turkID FROM verify")
-				
+				#coders = self.db.query("SELECT distinct turkID FROM verify")
+				coders = self.db.query("SELECT distinct turkID FROM feedback where video = %s and turkID in (SELECT distinct turkID FROM verify)", vid)
+
 				ts_set = []
 				
 				# messages sent back to the client
 				message = []
+				ret_coder = []
 				outlier = 0
 
 				video_len = 99999999
@@ -137,13 +139,12 @@ class MainHandler(tornado.web.RequestHandler):
 					ts  = []
 
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder["turkID"], vid)
-					if not f:
-						print "[", coder["turkID"], vid, "] does not exist!"
-						continue
+					if not f: continue
 
 					f = f["feedback"].split(",")
 
 					print coder["turkID"], vid
+					ret_coder.append(coder["turkID"])
 					
 					beg_index = 0
 					while beg_index < len(f):
@@ -193,7 +194,7 @@ class MainHandler(tornado.web.RequestHandler):
 						outlier = 0
 				
 				res = self.aggregate(ts_set, video_len)
-				ret = {'outlier': message, 'res': res}
+				ret = {'outlier': message, 'res': res, 'coder': ret_coder}
 				self.write( json.dumps(ret) )
 			except Exception, exception:
 				print "Type.DATABYVIDEO=>", exception
@@ -252,7 +253,8 @@ class MainHandler(tornado.web.RequestHandler):
 
 		elif t == Type.CODERPSI:
 			try:
-				coders = self.db.query("SELECT distinct turkID FROM verify")
+				#coders = self.db.query("SELECT distinct turkID FROM verify")
+				coders = self.db.query("SELECT distinct turkID FROM feedback where video = %s and turkID in (SELECT distinct turkID FROM verify)", vid)
 
 				for coder in coders:
 					print "[CODERPSI]=>", coder["turkID"], vid
@@ -267,7 +269,7 @@ class MainHandler(tornado.web.RequestHandler):
 		elif t == Type.DATABYCODERS:
 			try:
 				ts_set = []
-				outlier = 0
+				outlier= 0
 				video_len = 99999999
 
 				coders = turkIds.split("|")
@@ -276,9 +278,7 @@ class MainHandler(tornado.web.RequestHandler):
 					ts  = []
 
 					f = self.db.get("SELECT feedback FROM feedback WHERE turkID = %s and video = %s", coder, vid)
-					if not f:
-						print "[", coder, vid, "] does not exist!"
-						continue
+					if not f: continue
 
 					f = f["feedback"].split(",")
 					
