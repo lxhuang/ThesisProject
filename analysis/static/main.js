@@ -382,7 +382,8 @@ function onSelectVideo(video, func, param) {
 	var w = $("#paint").width();
 
 	if( video_buffer[video] ) {
-		createHistogram( video_buffer[video], "consensus view", w, canvas_height, undefined, video_codernum[video] );
+		updateCoderTableByCoders(video_codernum[video]);
+		createHistogram( video_buffer[video], "consensus view", w, canvas_height, undefined, video_codernum[video].length );
 		if( func )
 			func(param);
 		return;
@@ -394,7 +395,7 @@ function onSelectVideo(video, func, param) {
 		function(dat) {
 			if( dat.coder ) {
 				updateCoderTableByCoders(dat.coder);
-				video_codernum[video] = dat.coder.length;
+				video_codernum[video] = dat.coder;
 			}
 			if( dat.res ) {
 				video_buffer[video] = dat.res;
