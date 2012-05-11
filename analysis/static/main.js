@@ -27,6 +27,7 @@ var video_table = null,
 var coder_info_buffer = {},
 	coder_buffer = {},
 	video_buffer = {},
+	video_codernum = {},
 	outlier_buffer = {},
 	mark_buffer = {};
 
@@ -381,7 +382,7 @@ function onSelectVideo(video, func, param) {
 	var w = $("#paint").width();
 
 	if( video_buffer[video] ) {
-		createHistogram( video_buffer[video], "consensus view", w, canvas_height );
+		createHistogram( video_buffer[video], "consensus view", w, canvas_height, undefined, video_codernum[video] );
 		if( func )
 			func(param);
 		return;
@@ -393,6 +394,7 @@ function onSelectVideo(video, func, param) {
 		function(dat) {
 			if( dat.coder ) {
 				updateCoderTableByCoders(dat.coder);
+				video_codernum[video] = dat.coder.length;
 			}
 			if( dat.res ) {
 				video_buffer[video] = dat.res;
