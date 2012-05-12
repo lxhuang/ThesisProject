@@ -6,9 +6,10 @@ import tornado.database
 
 import random
 
-
+#164,162,159,157,155,154,153,149,148,147,146,144,141,139,134,130,115,112,69,60,53,50,47,39,
 #video_string = "l_S-RM-8l9w,qrHqKOkHNME,xAZ3-QGMWjo,UcaYbyw8MZo,f_U76yiaexg,bfBMc4RDafg,4M8tfXK8Y1Y,f7e91xGHQJ8"
-video_string = "BJTqFwhD3Zo,FitPohYSHFE,HD7_rI1YVV0,jXjKatmQCnE,2XIaHNhjlPs,PqSaLwyuNAE,Wedwm36_9tk,NBCqKx10Nic"
+#video_string = "BJTqFwhD3Zo,FitPohYSHFE,HD7_rI1YVV0,jXjKatmQCnE,2XIaHNhjlPs,PqSaLwyuNAE,Wedwm36_9tk,NBCqKx10Nic"
+video_string = "ApTBjM9EJT0,KaIRz8NTkUY,XxMY94nYZaM,m-rZwZAqjqQ,DSbIF3NMRT8,Axbv9YJcVXs,HIofrWKm2YU,SRXNmraVel0"
 
 class TaskHandler(tornado.web.RequestHandler):
 
