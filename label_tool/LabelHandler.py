@@ -15,8 +15,8 @@ class LabelHandler(tornado.web.RequestHandler):
 		anno_type = self.get_argument("t", None)
 		if (not file_name) or (not anno_type):
 			return
-		file_path = root_path + file_name + ".mp4"
-		self.render("annotation.html", file_path=file_path, file_name=file_name, type=anno_type)
+		file_path = root_path + file_name + "_x264.mp4"
+		self.render("annotation_v2.html", file_path=file_path, file_name=file_name, type=anno_type)
 
 	def post(self):
 		video_name = self.get_argument("v", None)

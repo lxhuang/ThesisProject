@@ -63,7 +63,6 @@ class AnalysisHandler(tornado.web.RequestHandler):
 			r = r + int(s[i])
 		return r/len(s)
 
-
 	def retrieveData(self):
 		try:
 			

@@ -13,7 +13,8 @@ class MyException(Exception):
 class Batch:
 	data_root = ""
 	coder_set = set()
-	video_set = set()	
+	video_set = set()
+	coder_per_video = dict()
 	
 	outlier_buffer = dict()
 	coder_info_buffer = dict()
@@ -24,7 +25,6 @@ class Batch:
 
 			cls.data_root = root
 
-			
 			personality_path = os.path.join(cls.data_root, "personality")
 			for filename in os.listdir( personality_path ):
 				(name, extension) = os.path.splitext( filename )
@@ -39,7 +39,6 @@ class Batch:
 						[k, v] = i.split("\t")
 						cls.coder_info_buffer[name][k] = v.strip()
 
-
 			feedback_path = os.path.join(cls.data_root, "feedback")
 			for filename in os.listdir( feedback_path ):
 				(name, extension) = os.path.splitext( filename )
@@ -48,15 +47,17 @@ class Batch:
 				#	if cls.coder_info_buffer[turkId]["loc"] == "us":
 					cls.coder_set.add( turkId )
 					cls.video_set.add( videoId )
+					if videoId not in cls.coder_per_video:
+						cls.coder_per_video[videoId] = []
+					cls.coder_per_video[videoId].append(turkId)
 
-
-			
-			print len(cls.coder_set)
-			print len(cls.video_set)
+			print "total coder number:", len(cls.coder_set)
+			print "total video number:", len(cls.video_set)
+			for v in cls.coder_per_video:
+				print v, "has", len(cls.coder_per_video[v]), "coders"
 		
 		except Exception, exception:
 			print "load => ", exception
-
 
 	def _aggregate(self, ts_set, video_len):
 		res = [0] * int( round(video_len/100) )
@@ -70,9 +71,7 @@ class Batch:
 				
 				for i in range(beg,end+1):
 					res[i] = res[i] + 1
-
 		return res
-
 	
 	def _entropy(self, ts):
 		ent = 0
@@ -253,8 +252,8 @@ class Batch:
 	#	print feedback_num, "\t", feedback_ent, "\t", feedback_cor
 
 		return [feedback_num, feedback_ent, feedback_cor]
-
 	
+
 	# user needs to decide the value of num 
 	def observe(self, videoId, attr, num):
 		try:
@@ -305,7 +304,6 @@ class Batch:
 		except Exception, exception:
 			print "observe => ", exception
 
-	
 	def observeAll(self, attr, num):
 		cls = Batch
 
