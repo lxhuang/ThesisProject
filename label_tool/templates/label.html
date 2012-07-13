@@ -1,0 +1,100 @@
+<html>
+
+<head>
+	<style>
+		body {
+			font-family:"Abadi MT W02 Exra Light","HelveticaNeueW01-45Ligh","HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,sans-serif;
+		}
+		#status {
+			text-align:center;
+			height:50px;
+			width:100%;
+		}
+		#mask {
+			position:absolute;
+			width:480px;
+			height:400px;
+			background-color:#ABB5F7;
+			text-align:center;
+			z-index:2;
+		}
+		#info {
+			z-index:3;
+			position:relative;
+			top:50%;
+			font-size:18px;
+			margin: auto;
+		}
+		#video_container {
+			float:left;
+			height:400px;
+			width:480px;
+			border:1px solid #CCC;
+			margin:0 10px 0 0;
+			-webkit-border-radius:5px;
+			-moz-border-radius:5px;
+		}
+		#label_container {
+			float:left;
+			height:400px;
+			width:300px;
+			overflow:scroll;
+			border:1px solid #CCC;
+			-webkit-border-radius:5px;
+			-moz-border-radius:5px;
+		}
+		#control_container {
+			float:left;
+			height:450px;
+			width:300px;
+			margin:0 0 0 10px;
+		}
+		#timeline_container {
+			width:100%;
+			height:100px;
+			margin:20px 0 0 0;
+			border:1px solid #CCC;
+		}
+	</style>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="{{ static_url("raphael.js") }}"></script>
+	<script type="text/javascript" src="{{ static_url("label.js") }}"></script>
+	<title>Annotate Video</title>
+</head>
+
+<body>
+	<div id="status" type="headnod" worker_id="" video_id=""></div>
+	<div id="video_container">
+		<div id="mask">
+			<div id="info"><span></span></div>
+		</div>
+		<!--
+		<video id="video" controls="controls" width="480" height="320"><source id="mp4" src="" type="video/mp4"/></video>
+		-->
+		<video id="video" width="480" height="320"><source id="mp4" src="" type="video/mp4"/></video>
+	</div>
+
+	<div id="label_container">
+		<table border="0" cellpadding="4" style="font-size: 13px;"></table>
+	</div>
+
+	<div id="sidebar_container">
+		<div id="control_container">
+			<div style="display:none"><select id="play_speed">
+				<option value="0.5">0.5X Speed</option>
+				<option value="1.0">1.0X Speed</option>
+				<option value="1.5">1.5X Speed</option>
+				<option value="2.0">2.0X Speed</option>
+			</select></div>
+			<div style="margin:10px 0 10px 0"></div>
+			<div id="check_finish"><input type="checkbox"/><span>Check it if you think you have finished.</span></div>
+			<div style="margin:10px 0 10px 0"></div>
+			<div><input type="button" id="submit_label" value="Submit"/></div>
+		</div>
+	</div>
+
+	<div style="clear:both;"></div>
+	<div id="timeline_container"></div>
+</body>
+
+</html>

@@ -10,6 +10,7 @@ from tornado.options import define, options
 
 from LabelHandler import LabelHandler
 from ConfirmHandler import ConfirmHandler
+from WelcomeHandler import WelcomeHandler
 
 define("port", default=8483, type=int)
 define("mysql_host", default="127.0.0.1:3306")
@@ -21,6 +22,7 @@ define("mysql_password", default="")
 class Application(tornado.web.Application):
 	def __init__(self):
 		handlers = [
+			(r"/", WelcomeHandler),
 			(r"/label", LabelHandler),
 			(r"/confirm", ConfirmHandler),
 		]
